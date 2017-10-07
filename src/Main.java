@@ -1,25 +1,22 @@
-import java.io.IOException;
 
-import yahoofinance.*;
+import java.util.Calendar;
+
+import yahoofinance.histquotes.Interval;
 
 
 public class Main {
     
 	public static void main(String[] args) {
 		
-		System.out.println("Hello");
+		Calendar from = Calendar.getInstance();
+		from.add(Calendar.YEAR, -5); // from 5 years ago
+		Calendar to = Calendar.getInstance();
 		
-		Stock stock;
-		try {
-			stock = YahooFinance.get("INTC");
-			
-			System.out.println(stock.getHistory());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		StockInfo test = new StockInfo("TSLA", from, to, Interval.WEEKLY);
 		
-		//System.out.println(price);
+		test.PrintHistory();
+		
+		
 		
     }
 }
