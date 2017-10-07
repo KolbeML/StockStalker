@@ -79,5 +79,27 @@ public class StockInfo {
 		
 	}
 	
+	/*
+	 * Get the percent difference from the last index to this index
+	 */
+	public double PercentDiff(int index) {
+		
+		double percent = 0.0;
+		
+		if(index != 0) {
+			
+			double lastValue = history.get(index-1).getClose().doubleValue();
+			double value = history.get(index).getClose().doubleValue();
+			
+			// calculate the percent
+			// differenceInValue divided by lastValue times
+			percent =  (value - lastValue) / lastValue;
+			
+		}
+		
+		return percent;
+		
+	}
+	
 	
 }
