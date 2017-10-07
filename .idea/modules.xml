@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Stocker.iml" filepath="$PROJECT_DIR$/Stocker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Stock Stocker.iml" filepath="$PROJECT_DIR$/.idea/modules/Stock Stocker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Stock_Stocker_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Stock_Stocker_main.iml" group="Stock Stocker" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Stock_Stocker_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Stock_Stocker_test.iml" group="Stock Stocker" />
     </modules>
   </component>
 </project>
