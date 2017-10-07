@@ -1,4 +1,4 @@
-# stocker
+# StockStalker
 HackUMBC Project Fall '17
 
 This project is a desktop app that will display historical stock data - provide a dollar amount and select two stocks, 
