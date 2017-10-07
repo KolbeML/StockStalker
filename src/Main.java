@@ -16,11 +16,26 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
+import yahoofinance.*;
+
+
 public class Main extends Application{
 
     @Override
     public void start(Stage primary){
 
+    	Stock stock;
+		try {
+			stock = YahooFinance.get("INTC");
+			
+			System.out.println(stock.getHistory());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
     	//Builds the Pane
         BorderPane root = new BorderPane();
         GridPane infoPane = new GridPane();
@@ -80,4 +95,4 @@ public class Main extends Application{
     }
 
     public static void main(String[]args){launch(args);}
-}
+		
