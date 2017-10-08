@@ -126,10 +126,7 @@ public class Main extends Application{
 					ArrayList<Double> list2 = new ArrayList<Double>(stockLData.GetPrices());
 					
 					Calculate(true, false);
-					/*
-					ArrayList<Double> profits = new ArrayList<Double>(stockLData.GetProfitInfo(investment));
-					investLText.setText(profits.get(profits.size()-1)+"");
-					*/
+					
 					leftStock = setData(array.get(i), list2, leftStock);
 					
 					break;
@@ -149,10 +146,6 @@ public class Main extends Application{
 					rStock.setText(array.get(i));
 					ArrayList<Double> list2 = new ArrayList<Double>(stockRData.GetPrices());
 					
-					/*
-					ArrayList<Double> profits = new ArrayList<Double>(stockRData.GetProfitInfo(investment));
-					investRText.setText(profits.get(profits.size()-1)+"");
-					*/
 					Calculate(false, true);
 					
 					rightStock = setData(array.get(i), list2, rightStock);
@@ -165,9 +158,7 @@ public class Main extends Application{
 		
 		//select initial values
 		leftStockList.getSelectionModel().select(0);
-		leftStockList.scrollTo(0);
 		rightStockList.getSelectionModel().select(1);
-		rightStockList.scrollTo(1);
 
 		
 		dataPane.add(new Text("Invest Amount"), 0, 0);
