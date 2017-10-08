@@ -8,12 +8,11 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.Scene;
@@ -126,10 +125,8 @@ public class Main extends Application {
 		leftStockList = new ListView<String>(stocks);
 		rightStockList = new ListView<String>(stocks);
 		left.getChildren().addAll(lSearch, leftStockList);
-		left.setPadding(new Insets(5));
 		left.setSpacing(5);
 		right.getChildren().addAll(rSearch, rightStockList);
-		right.setPadding(new Insets(5));
 		right.setSpacing(5);
 		
 		
@@ -259,9 +256,9 @@ public class Main extends Application {
 		//Arranges the data at the bottom
 		int y = 3;
 		int x = 0;
-		Pane[] panes = new Pane[11];
+		FlowPane[] panes = new FlowPane[11];
 		for(int i = 0; i < panes.length; i++) {
-			panes[i] = new Pane();
+			panes[i] = new FlowPane();
 			
 			if(y == 5) {
 				x++;
@@ -270,7 +267,6 @@ public class Main extends Application {
 			
 			panes[i].getStyleClass().add("stocker-pane");
 			dataPane.add(panes[i], x, y);
-			
 			y++;
 		}
 		
@@ -288,11 +284,7 @@ public class Main extends Application {
 		
 		dataPane.add(new Text("Investment Amount"), 0, 0);
 		dataPane.add(investInput, 0, 1);
-		
-		//dataPane.setPadding(new Insets(5));
-		//dataPane.setVgap(5);
-		//dataPane.setHgap(5);
-		dataPane.add(change, 4, 0);
+		dataPane.add(change, 2, 0);
 
 		//Toggle button for percentage and price
 		change.setOnAction(e -> {
@@ -368,7 +360,6 @@ public class Main extends Application {
 		infoPane.add(startDate, 0, 0);
 		infoPane.add(interval, 1, 0);
 		infoPane.add(endDate, 2, 0);
-		infoPane.setPadding(new Insets(5));
 		GridPane.setColumnSpan(chart, GridPane.REMAINING);
 		GridPane.setHalignment(startDate, HPos.LEFT);
 		GridPane.setHalignment(interval, HPos.CENTER);
@@ -379,8 +370,7 @@ public class Main extends Application {
 		title.setId("title-text");
 		titlePane.getChildren().add(title);
 		titlePane.setAlignment(Pos.CENTER);
-		titlePane.setPadding(new Insets(5));
-
+		
 		//Sets up the base layout
 		root.setTop(titlePane);
 		root.setCenter(infoPane);
