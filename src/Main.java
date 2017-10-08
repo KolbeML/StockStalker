@@ -54,6 +54,8 @@ public class Main extends Application {
 	private Text rDifference;
 	private Text lPercent;
 	private Text rPercent;
+	private Text lPrice;
+	private Text rPrice;
 	private NumberAxis yAxis;
 
 	private double investment;
@@ -102,8 +104,10 @@ public class Main extends Application {
 		rDifference = new Text();
 		lPercent = new Text();
 		rPercent = new Text();
+		lPrice = new Text();
+		rPrice = new Text();
 		investInput = new TextField("0");
-
+		
 		//Search Fields
 		TextField rSearch = new TextField();
 		TextField lSearch = new TextField();
@@ -261,7 +265,7 @@ public class Main extends Application {
 		//Arranges the data at the bottom
 		int y = 3;
 		int x = 0;
-		FlowPane[] panes = new FlowPane[11];
+		FlowPane[] panes = new FlowPane[14];
 		for(int i = 0; i < panes.length; i++) {
 			panes[i] = new FlowPane();
 			
@@ -286,6 +290,9 @@ public class Main extends Application {
 		panes[8].getChildren().add(new Text("Percent Change"));
 		panes[9].getChildren().add(lPercent);
 		panes[10].getChildren().add(rPercent);
+		panes[11].getChildren().add(new Text("Stock Price"));
+		panes[12].getChildren().add(lPrice);
+		panes[13].getChildren().add(rPrice);
 		
 		dataPane.add(new Text("Investment Amount"), 0, 0);
 		dataPane.add(investInput, 0, 1);
@@ -403,6 +410,7 @@ public class Main extends Application {
 			lDifference.setText((difference < 0 ? "-$" : "$") + df.format(Math.abs(difference)));
 			double percent = StockInfo.getPercentChange(investment, profitL.get(profitL.size() - 1));
 			lPercent.setText(df.format(percent * 100.0) + "%");
+			setPrice(lPrice,stockLData);
 
 		}
 		if (right) {
@@ -412,6 +420,7 @@ public class Main extends Application {
 			rDifference.setText((difference < 0 ? "-$" : "$") + df.format(Math.abs(difference)));
 			double percent = StockInfo.getPercentChange(investment, profitR.get(profitR.size() - 1));
 			rPercent.setText(df.format(percent * 100.0) + "%");
+			setPrice(rPrice,stockRData);
 
 		}
 
@@ -442,6 +451,16 @@ public class Main extends Application {
 		chart.getData().set(chart.getData().indexOf(oldSeries), series);
 
 		return series;
+	}
+	
+	protected void setPrice(Text text, StockInfo data) {
+
+		DecimalFormat df = new DecimalFormat("#.00");
+
+		
+		ArrayList<Double> array = new ArrayList<Double>(data.getPrices());
+		
+		text.setText(df.format(array.get(array.size()-1))+"");
 	}
 
 	// Checks to make sure a string contains only numbers
