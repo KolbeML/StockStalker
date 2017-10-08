@@ -181,6 +181,24 @@ public class StockInfo {
 		return percents;
 
 	}
+	
+	public List<Double> GetPrices() {
+
+		List<Double> prices = new ArrayList<Double>();
+
+		
+		double lastPrice = history.get(0).getClose().doubleValue();;
+		for (int i = 0; i < history.size(); i++) {
+
+			if( history.get(i).getClose() != null ) {
+				lastPrice = history.get(i).getClose().doubleValue();
+			}
+			
+			prices.add(lastPrice);
+
+		}
+		return prices;
+	}
 
 	public static double getValueChange(double initial, double fin) {
 		return fin - initial;

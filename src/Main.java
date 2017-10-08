@@ -20,6 +20,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
@@ -52,8 +53,11 @@ public class Main extends Application {
 	private Text rDifference;
 	private Text lPercent;
 	private Text rPercent;
+	private NumberAxis yAxis;
 
 	private double investment;
+	
+	private boolean percent;
 
 	// stock info
 	private Calendar start;
@@ -78,6 +82,8 @@ public class Main extends Application {
 		HBox titlePane = new HBox();
 		VBox left = new VBox();
 		VBox right = new VBox();
+		
+		percent = true;
 
 		investLText = new Text();
 		investRText = new Text();
@@ -91,10 +97,12 @@ public class Main extends Application {
 
 		TextField rSearch = new TextField();
 		TextField lSearch = new TextField();
+		
+		Button change = new Button("Price");
 
 		// Sets up the chart
 		final NumberAxis xAxis = new NumberAxis();
-		final NumberAxis yAxis = new NumberAxis();
+		yAxis = new NumberAxis();
 		xAxis.setLabel("Time Interval");
 		xAxis.setTickLabelsVisible(false);
 		yAxis.setLabel("Percentage");
@@ -198,7 +206,13 @@ public class Main extends Application {
 
 					stockLData = new StockInfo(array.get(i), start, end, dateInterval);
 					lStock.setText(array.get(i));
-					ArrayList<Double> list2 = new ArrayList<Double>(stockLData.getPercentChanges());
+					
+					ArrayList<Double> list2 = new ArrayList<Double>();
+					if(percent) {
+						list2 = new ArrayList<Double>(stockLData.getPercentChanges());
+					}else {
+						list2 = new ArrayList<Double>(stockLData.GetPrices());
+					}
 
 					calculate(true, false);
 
@@ -217,8 +231,13 @@ public class Main extends Application {
 					stockRData = new StockInfo(array.get(i), start, end, dateInterval);
 
 					rStock.setText(array.get(i));
-					ArrayList<Double> list2 = new ArrayList<Double>(stockRData.getPercentChanges());
-
+					ArrayList<Double> list2 = new ArrayList<Double>();
+					
+					if(percent) {
+						list2 = new ArrayList<Double>(stockRData.getPercentChanges());
+					}else {
+						list2 = new ArrayList<Double>(stockRData.GetPrices());
+					}
 					calculate(false, true);
 
 					rightStock = setData(stockRData.getName(), list2, rightStock);
@@ -249,7 +268,22 @@ public class Main extends Application {
 		dataPane.setPadding(new Insets(5));
 		dataPane.setVgap(5);
 		dataPane.setHgap(5);
+		dataPane.add(change, 4, 0);
 
+		change.setOnAction(e->{
+			 if(percent) {
+				 percent = false;
+				 change.setText("Percentage");
+				 yAxis.setLabel("Price");
+				 updateLists();
+			 }else {
+				 percent = true;
+				 change.setText("Price");
+				 yAxis.setLabel("Percentage");
+				 updateLists();
+			 }
+		});
+		
 		// ----INTERVAL AND DATES----
 		interval.setOnAction(e -> {
 
