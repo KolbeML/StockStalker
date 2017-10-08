@@ -23,10 +23,12 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 
 import java.io.IOException;
@@ -133,6 +135,53 @@ public class Main extends Application{
 		startDate = new DatePicker();
 		endDate = new DatePicker();
 		
+		Callback<DatePicker, DateCell> dayCellFactoryStart = new Callback<DatePicker, DateCell>() {
+			
+			public DateCell call( final DatePicker datePicker) {
+				
+				return new DateCell() {
+					
+					@Override
+					public void updateItem(LocalDate item, boolean empty) {
+						super.updateItem(item, empty);
+						
+						//disable future dates
+						if(item.isAfter(LocalDate.now().minusDays(1))) {
+							this.setDisable(true);
+						}
+					}
+					
+				};
+				
+			}
+			
+		};
+		Callback<DatePicker, DateCell> dayCellFactoryEnd = new Callback<DatePicker, DateCell>() {
+			
+			public DateCell call( final DatePicker datePicker) {
+				
+				return new DateCell() {
+					
+					@Override
+					public void updateItem(LocalDate item, boolean empty) {
+						super.updateItem(item, empty);
+						
+						//disable future dates
+						if(item.isAfter(LocalDate.now())) {
+							this.setDisable(true);
+						}
+					}
+					
+				};
+				
+			}
+			
+		};
+		
+		startDate.setDayCellFactory(dayCellFactoryStart);
+		endDate.setDayCellFactory(dayCellFactoryEnd);
+		
+		
 		ObservableList intervals = FXCollections.observableArrayList(
 				DateInterval.MONTHLY.getStr(),
 				DateInterval.WEEKLY.getStr(),
@@ -225,16 +274,32 @@ public class Main extends Application{
 		
 		startDate.valueProperty().addListener(event -> {
 		    java.util.Date date = Date.from( startDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant() );
-		    start = Calendar.getInstance();
-		    start.setTime(date);
-		    updateLists();
+		    Calendar tempDate = Calendar.getInstance();
+		    tempDate.setTime(date);
+		    
+		    if(tempDate.compareTo(Calendar.getInstance()) < 0) {
+			    start = tempDate;
+			    
+			    updateLists();
+		    }
+		    
+		    //startDate.setValue(   new Date(  start.getTimeInMillis()  ).toLocalDate()   );
+		    
 		});
 		
 		endDate.valueProperty().addListener(event -> {
 		    java.util.Date date = Date.from( startDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant() );
-		    end = Calendar.getInstance();
-		    end.setTime(date);
-		    updateLists();
+		    Calendar tempDate = Calendar.getInstance();
+		    tempDate.setTime(date);
+		    
+		    if(tempDate.compareTo(Calendar.getInstance()) <= 0) {
+			    end = tempDate;
+			    
+			    updateLists();
+		    }
+		    
+		    //endDate.setValue(   new Date(  end.getTimeInMillis()  ).toLocalDate()   );
+		    
 		});
 		
 		// ---CALCULATE TEXT---
