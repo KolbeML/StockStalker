@@ -48,6 +48,8 @@ public class Main extends Application{
 	private Text lStock;
 	private Text lDifference;
 	private Text rDifference;
+	private Text lPercent;
+	private Text rPercent;
 	
 	private double investment;
 	
@@ -75,7 +77,8 @@ public class Main extends Application{
 		rStock = new Text();
 		lDifference = new Text();
 		rDifference = new Text();
-		
+		lPercent = new Text();
+		rPercent = new Text();
 		investInput = new TextField("0");
 		
 		TextField rSearch = new TextField();
@@ -173,6 +176,8 @@ public class Main extends Application{
 		dataPane.add(lDifference, 2, 3);
 		dataPane.add(rDifference, 2, 4);
 		dataPane.add(new Text("Percent Change"), 3, 2);
+		dataPane.add(lPercent, 3, 3);
+		dataPane.add(rPercent, 3, 4);
 		dataPane.setPadding(new Insets(5));
 		dataPane.setVgap(5);
 		dataPane.setHgap(5);
@@ -247,16 +252,20 @@ public class Main extends Application{
 			//right or both
 			ArrayList<Double> profitL = new ArrayList<Double>(stockLData.GetProfitInfo(investment));
 			investLText.setText("$" + df.format(profitL.get(profitL.size()-1))+"");
-			double difference = profitL.get(profitL.size()-1)-investment;
-			
-			lDifference.setText((difference < 0 ? "-$" : "$")+df.format(difference));
+			double difference = StockInfo.getTotalChange(investment, profitL.get(profitL.size() - 1));
+			lDifference.setText((difference < 0 ? "-$" : "$") + df.format(Math.abs(difference)));
+			double percent = StockInfo.getTotalPercentChange(investment, profitL.get(profitL.size() - 1));
+			lPercent.setText(df.format(percent) + "%");
+
 		}
 		if(right) {
 			ArrayList<Double> profitR = new ArrayList<Double>(stockRData.GetProfitInfo(investment));
 			investRText.setText("$" + df.format(profitR.get(profitR.size()-1))+"");
-			double difference = profitR.get(profitR.size()-1)-investment;
-	
-			rDifference.setText((difference < 0 ? "-$" : "$")+df.format(difference));
+			double difference = StockInfo.getTotalChange(investment, profitR.get(profitR.size() - 1));
+			rDifference.setText((difference < 0 ? "-$" : "$") + df.format(Math.abs(difference)));
+			double percent = StockInfo.getTotalPercentChange(investment, profitR.get(profitR.size() - 1));
+			rPercent.setText(df.format(percent) + "%");
+
 		}
 		
 	}
@@ -269,7 +278,7 @@ public class Main extends Application{
 		for(int i = 0; i < data.size(); i++) {
 			series.getData().add(new XYChart.Data<Number, Number>(i,data.get(i)));
 		}
-
+		chart.setCreateSymbols(false);
 		chart.getData().set( chart.getData().indexOf(oldSeries), series);
 		
 		return series;

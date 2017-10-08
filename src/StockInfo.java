@@ -157,5 +157,12 @@ public class StockInfo {
 		return prices;
 
 	}
+	public static double getTotalChange(double initialInvestment, double finalValue) {
+		return finalValue - initialInvestment;
+	}
+	
+	public static double getTotalPercentChange(double initialInvestment, double finalValue) {
+		return getTotalChange(initialInvestment, finalValue)*100.0/initialInvestment;
+	}
 
 }
