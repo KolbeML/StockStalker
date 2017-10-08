@@ -144,7 +144,6 @@ public class StockInfo {
 		List<Double> percents = new ArrayList<Double>();
 
 		double percent = percentDiff(0);
-		;
 		for (int i = 0; i < history.size(); i++) {
 
 			if (history.get(i).getClose() != null) {

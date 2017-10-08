@@ -3,8 +3,6 @@ import java.text.*;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
-import java.util.List;
-import java.util.TimeZone;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -29,13 +27,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.util.StringConverter;
 
-import java.io.IOException;
 import java.sql.Date;
 
-import yahoofinance.*;
-import yahoofinance.histquotes.HistoricalQuote;
 import yahoofinance.histquotes.Interval;
 
 public class Main extends Application {
@@ -50,8 +44,6 @@ public class Main extends Application {
 	private ComboBox<String> interval;
 	private GridPane dataPane;
 	private TextField investInput;
-	private TextField rSearch;
-	private TextField lSearch;
 	private Text investLText;
 	private Text investRText;
 	private Text rStock;
@@ -109,9 +101,8 @@ public class Main extends Application {
 		chart = new LineChart<Number, Number>(xAxis, yAxis);
 		chart.setTitle("Stock Comparison");
 
-		StockLists list = new StockLists();
-		list.readFile();
-		ArrayList<String> array = list.getStocks();
+		StockLists.readFile();
+		ArrayList<String> array = StockLists.getStocks();
 
 		// Sets up the lists
 		ObservableList<String> stocks = FXCollections.observableArrayList(array);
@@ -179,7 +170,7 @@ public class Main extends Application {
 		endDate.setDayCellFactory(dayCellFactoryEnd);
 		
 		
-		ObservableList intervals = FXCollections.observableArrayList(
+		ObservableList<String> intervals = FXCollections.observableArrayList(
 				DateInterval.MONTHLY.getStr(),
 				DateInterval.WEEKLY.getStr(),
 				DateInterval.DAILY.getStr()
