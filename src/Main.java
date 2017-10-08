@@ -87,6 +87,7 @@ public class Main extends Application {
 		//Toggle value and button
 		percent = true;
 		Button change = new Button("Price");
+		change.getStyleClass().add("stocker-button");
 
 		//Data Text
 		investLText = new Text();
@@ -288,17 +289,6 @@ public class Main extends Application {
 		for(int i = 0; i < panes.length; i++) {
 			
 		}
-//		dataPane.add(panes[0], 0, 3);
-//		dataPane.add(panes[1], 0, 4);
-//		dataPane.add(panes[2], 1, 2);
-//		dataPane.add(panes[3], 1, 3);
-//		dataPane.add(panes[4], 1, 4);
-//		dataPane.add(panes[5], 2, 2);
-//		dataPane.add(panes[6], 2, 3);
-//		dataPane.add(panes[7], 2, 4);
-//		dataPane.add(panes[8], 3, 2);
-//		dataPane.add(panes[9], 3, 3);
-//		dataPane.add(panes[10], 3, 4);
 		dataPane.setPadding(new Insets(5));
 		dataPane.setVgap(5);
 		dataPane.setHgap(5);
@@ -385,7 +375,9 @@ public class Main extends Application {
 		GridPane.setHalignment(endDate, HPos.RIGHT);
 		
 		//Sets up the title
-		titlePane.getChildren().add(new Text("Stock Stalker"));
+		Text title = new Text("Stock Stalker");
+		title.setId("title-text");
+		titlePane.getChildren().add(title);
 		titlePane.setAlignment(Pos.CENTER);
 		titlePane.setPadding(new Insets(5));
 
