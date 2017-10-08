@@ -13,6 +13,7 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.Scene;
@@ -83,8 +84,12 @@ public class Main extends Application {
 		VBox left = new VBox();
 		VBox right = new VBox();
 
+		//Toggle value and button
 		percent = true;
+		Button change = new Button("Price");
+		change.getStyleClass().add("stocker-button");
 
+		//Data Text
 		investLText = new Text();
 		investRText = new Text();
 		lStock = new Text();
@@ -95,38 +100,39 @@ public class Main extends Application {
 		rPercent = new Text();
 		investInput = new TextField("0");
 
+		//Search Fields
 		TextField rSearch = new TextField();
 		TextField lSearch = new TextField();
-
-		Button change = new Button("Price");
-		change.getStyleClass().add("stocker-button");
-
+		
 		// Sets up the chart
 		final NumberAxis xAxis = new NumberAxis();
 		yAxis = new NumberAxis();
 		xAxis.setLabel("Time Interval");
 		xAxis.setTickLabelsVisible(false);
 		yAxis.setLabel("Percentage");
+		leftStock = new XYChart.Series<Number, Number>();
+		rightStock = new XYChart.Series<Number, Number>();
 		chart = new LineChart<Number, Number>(xAxis, yAxis);
 		chart.setTitle("Stock Comparison");
+		chart.getData().add(leftStock);
+		chart.getData().add(rightStock);
 
+		//Pulls in the data
 		StockLists.readFile();
 		ArrayList<String> array = StockLists.getStocks();
-		
+
 		// Sets up the lists
 		ObservableList<String> stocks = FXCollections.observableArrayList(array);
 		leftStockList = new ListView<String>(stocks);
 		rightStockList = new ListView<String>(stocks);
-		leftStock = new XYChart.Series<Number, Number>();
-		rightStock = new XYChart.Series<Number, Number>();
 		left.getChildren().addAll(lSearch, leftStockList);
 		left.setPadding(new Insets(5));
 		left.setSpacing(5);
 		right.getChildren().addAll(rSearch, rightStockList);
 		right.setPadding(new Insets(5));
 		right.setSpacing(5);
-		chart.getData().add(leftStock);
-		chart.getData().add(rightStock);
+		
+		
 
 		// DATE STUFF
 		startDate = new DatePicker();
@@ -181,7 +187,7 @@ public class Main extends Application {
 		ObservableList<String> intervals = FXCollections.observableArrayList(DateInterval.MONTHLY.getStr(),
 				DateInterval.WEEKLY.getStr(), DateInterval.DAILY.getStr());
 		interval = new ComboBox<String>(intervals);
-		interval.getSelectionModel().clearAndSelect(0);
+		interval.getSelectionModel().select(0);
 		dateInterval = DateInterval.valueOf(interval.getSelectionModel().getSelectedItem()).getVal();
 
 		startDate.setMinWidth(100.0);
@@ -196,9 +202,8 @@ public class Main extends Application {
 		startDate.setValue(dateTime.toLocalDate());
 		dateTime = new Date(end.getTimeInMillis());
 		endDate.setValue(dateTime.toLocalDate());
-		
-		
-		// ----SELECTING STOCKS FROM THE LISTS----
+
+		//List functionality
 		leftStockList.getSelectionModel().selectedItemProperty().addListener(e -> {
 			for (Integer i : leftStockList.getSelectionModel().getSelectedIndices()) {
 				if (array.get(i).equals(leftStockList.getSelectionModel().getSelectedItem())) {
@@ -248,27 +253,48 @@ public class Main extends Application {
 		});
 
 		// select initial values
-		leftStockList.getSelectionModel().clearAndSelect(0);
-		rightStockList.getSelectionModel().clearAndSelect(1);
+		leftStockList.getSelectionModel().select(0);
+		rightStockList.getSelectionModel().select(1);
+
+		//Arranges the data at the bottom
+		int y = 3;
+		int x = 0;
+		Pane[] panes = new Pane[11];
+		for(int i = 0; i < panes.length; i++) {
+			panes[i] = new Pane();
+			
+			if(y == 5) {
+				x++;
+				y = 2;
+			}
+			dataPane.add(panes[i], x, y);
+			y++;
+		}
+		
+		panes[0].getChildren().add(lStock);
+		panes[1].getChildren().add(rStock);
+		panes[2].getChildren().add(new Text("Return"));
+		panes[3].getChildren().add(investLText);
+		panes[4].getChildren().add(investRText);
+		panes[5].getChildren().add(new Text("Gain/Loss"));
+		panes[6].getChildren().add(lDifference);
+		panes[7].getChildren().add(rDifference);
+		panes[8].getChildren().add(new Text("Percent Change"));
+		panes[9].getChildren().add(lPercent);
+		panes[10].getChildren().add(rPercent);
 		
 		dataPane.add(new Text("Investment Amount"), 0, 0);
 		dataPane.add(investInput, 0, 1);
-		dataPane.add(lStock, 0, 3);
-		dataPane.add(rStock, 0, 4);
-		dataPane.add(new Text("Return"), 1, 2);
-		dataPane.add(investLText, 1, 3);
-		dataPane.add(investRText, 1, 4);
-		dataPane.add(new Text("Gain/Loss"), 2, 2);
-		dataPane.add(lDifference, 2, 3);
-		dataPane.add(rDifference, 2, 4);
-		dataPane.add(new Text("Percent Change"), 3, 2);
-		dataPane.add(lPercent, 3, 3);
-		dataPane.add(rPercent, 3, 4);
+		
+		for(int i = 0; i < panes.length; i++) {
+			
+		}
 		dataPane.setPadding(new Insets(5));
 		dataPane.setVgap(5);
 		dataPane.setHgap(5);
 		dataPane.add(change, 4, 0);
 
+		//Toggle button for percentage and price
 		change.setOnAction(e -> {
 			if (percent) {
 				percent = false;
@@ -318,7 +344,7 @@ public class Main extends Application {
 		rSearch.textProperty().addListener((obs, oldText, newText) -> {
 			for (int i = 0; i < array.size(); i++) {
 				if (array.get(i).startsWith(newText.toUpperCase())) {
-					rightStockList.getSelectionModel().clearAndSelect(i);
+					rightStockList.getSelectionModel().select(i);
 					rightStockList.scrollTo(i);
 					break;
 				}
@@ -329,7 +355,7 @@ public class Main extends Application {
 		lSearch.textProperty().addListener((obs, oldText, newText) -> {
 			for (int i = 0; i < array.size(); i++) {
 				if (array.get(i).startsWith(newText.toUpperCase())) {
-					leftStockList.getSelectionModel().clearAndSelect(i);
+					leftStockList.getSelectionModel().select(i);
 					leftStockList.scrollTo(i);
 					break;
 				}
@@ -337,23 +363,25 @@ public class Main extends Application {
 
 		});
 
-		// infoPane.add(new Text("test"), x, y);
+		//Arranges the chart and ComboBoxes
 		infoPane.add(chart, 0, 1);
-		GridPane.setColumnSpan(chart, GridPane.REMAINING);
 		infoPane.add(startDate, 0, 0);
-		GridPane.setHalignment(startDate, HPos.LEFT);
 		infoPane.add(interval, 1, 0);
-		GridPane.setHalignment(interval, HPos.CENTER);
 		infoPane.add(endDate, 2, 0);
-		GridPane.setHalignment(endDate, HPos.RIGHT);
 		infoPane.setPadding(new Insets(5));
+		GridPane.setColumnSpan(chart, GridPane.REMAINING);
+		GridPane.setHalignment(startDate, HPos.LEFT);
+		GridPane.setHalignment(interval, HPos.CENTER);
+		GridPane.setHalignment(endDate, HPos.RIGHT);
 		
+		//Sets up the title
 		Text title = new Text("Stock Stalker");
 		title.setId("title-text");
 		titlePane.getChildren().add(title);
 		titlePane.setAlignment(Pos.CENTER);
 		titlePane.setPadding(new Insets(5));
 
+		//Sets up the base layout
 		root.setTop(titlePane);
 		root.setCenter(infoPane);
 		root.setRight(right);
@@ -361,7 +389,7 @@ public class Main extends Application {
 		root.setBottom(dataPane);
 
 		Scene scene = new Scene(root, 1000, 600);
-		scene.getStylesheets().add("resources/style.css");
+		scene.getStylesheets().add("resources/stylesheet.css");
 		primary.setScene(scene);
 		primary.show();
 	}
