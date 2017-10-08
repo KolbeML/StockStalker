@@ -85,9 +85,9 @@ public class Main extends Application{
 
 
 		//Test array
-		ArrayList<String> array = new ArrayList<String>();
-		array.add("Test1");
-		array.add("Test2");
+		StockLists list = new StockLists();
+		list.readFile();
+		ArrayList<String> array = list.getStocks();
 
 		//Sets up the lists
 		ObservableList<String> stocks = FXCollections.observableArrayList(array);
