@@ -124,7 +124,7 @@ public class StockInfo {
 	/*
 	 * Get the profit info over time
 	 */
-	public List<Double> GetProfitInfo(double initialInvestment) {
+	public List<Double> getProfitInfo(double initialInvestment) {
 
 		List<Double> profits = new ArrayList<Double>();
 
@@ -143,6 +143,24 @@ public class StockInfo {
 
 		return profits;
 
+	}
+
+	public List<Double> getPrices(){
+
+		List<Double> prices = new ArrayList<Double>();
+
+		
+		double lastPrice = history.get(0).getClose().doubleValue();;
+		for (int i = 0; i < history.size(); i++) {
+
+			if( history.get(i).getClose() != null ) {
+				lastPrice = history.get(i).getClose().doubleValue();
+			}
+			
+			prices.add(lastPrice);
+		}
+		
+		return prices;
 	}
 
 	public List<Double> getPercentChanges() {

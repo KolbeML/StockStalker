@@ -233,11 +233,11 @@ public class Main extends Application {
 		leftStockList.getSelectionModel().select(0);
 		rightStockList.getSelectionModel().select(1);
 
-		dataPane.add(new Text("Invest Amount"), 0, 0);
+		dataPane.add(new Text("Investment Amount"), 0, 0);
 		dataPane.add(investInput, 0, 1);
 		dataPane.add(lStock, 0, 3);
 		dataPane.add(rStock, 0, 4);
-		dataPane.add(new Text("Sell Total"), 1, 2);
+		dataPane.add(new Text("Return"), 1, 2);
 		dataPane.add(investLText, 1, 3);
 		dataPane.add(investRText, 1, 4);
 		dataPane.add(new Text("Gain/Loss"), 2, 2);
@@ -338,7 +338,7 @@ public class Main extends Application {
 
 		if (left) {
 			// right or both
-			ArrayList<Double> profitL = new ArrayList<Double>(stockLData.GetProfitInfo(investment));
+			ArrayList<Double> profitL = new ArrayList<Double>(stockLData.getProfitInfo(investment));
 			investLText.setText("$" + df.format(profitL.get(profitL.size() - 1)) + "");
 			double difference = StockInfo.getValueChange(investment, profitL.get(profitL.size() - 1));
 			lDifference.setText((difference < 0 ? "-$" : "$") + df.format(Math.abs(difference)));
@@ -347,7 +347,7 @@ public class Main extends Application {
 
 		}
 		if (right) {
-			ArrayList<Double> profitR = new ArrayList<Double>(stockRData.GetProfitInfo(investment));
+			ArrayList<Double> profitR = new ArrayList<Double>(stockRData.getProfitInfo(investment));
 			investRText.setText("$" + df.format(profitR.get(profitR.size() - 1)) + "");
 			double difference = StockInfo.getValueChange(investment, profitR.get(profitR.size() - 1));
 			rDifference.setText((difference < 0 ? "-$" : "$") + df.format(Math.abs(difference)));
