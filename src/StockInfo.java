@@ -124,13 +124,13 @@ public class StockInfo {
 
 		double profit = initialInvestment;
 		int number = (int) (profit / history.get(0).getClose().doubleValue());
-		double leftover = getValueChange(profit, (double) (history.get(0).getClose().doubleValue() * number));
+		double leftover = getValueChange((double) (history.get(0).getClose().doubleValue() * number), profit);
 
 		for (int i = 0; i < history.size(); i++) {
 			profit = (profit - leftover) * (1 + percentDiff(i)) + leftover;
 			if (percentDiff(i) != 0 && leftover > history.get(i).getClose().doubleValue()) {
 				number += (int) (leftover / history.get(i).getClose().doubleValue());
-				leftover = getValueChange(profit, (double) (history.get(0).getClose().doubleValue() * number));
+				leftover = getValueChange((double) (history.get(0).getClose().doubleValue() * number), profit);
 			}
 			profits.add(profit);
 		}
@@ -139,23 +139,23 @@ public class StockInfo {
 
 	}
 
-	public List<Double> getPrices() {
+	public List<Double> getPercentChanges() {
 
-		List<Double> prices = new ArrayList<Double>();
+		List<Double> percents = new ArrayList<Double>();
 
-		double lastPrice = history.get(0).getClose().doubleValue();
+		double percent = percentDiff(0);
 		;
 		for (int i = 0; i < history.size(); i++) {
 
 			if (history.get(i).getClose() != null) {
-				lastPrice = history.get(i).getClose().doubleValue();
+				percent = percentDiff(i);
 			}
 
-			prices.add(lastPrice);
+			percents.add(percent);
 
 		}
 
-		return prices;
+		return percents;
 
 	}
 

@@ -103,7 +103,7 @@ public class Main extends Application {
 		final NumberAxis yAxis = new NumberAxis();
 		xAxis.setLabel("Time Interval");
 		xAxis.setTickLabelsVisible(false);
-		yAxis.setLabel("Price");
+		yAxis.setLabel("Percentage");
 		chart = new LineChart<Number, Number>(xAxis, yAxis);
 		chart.setTitle("Stock Comparison");
 
@@ -155,7 +155,7 @@ public class Main extends Application {
 
 					stockLData = new StockInfo(array.get(i), start, end, dateInterval);
 					lStock.setText(array.get(i));
-					ArrayList<Double> list2 = new ArrayList<Double>(stockLData.getPrices());
+					ArrayList<Double> list2 = new ArrayList<Double>(stockLData.getPercentChanges());
 
 					calculate(true, false);
 
@@ -174,7 +174,7 @@ public class Main extends Application {
 					stockRData = new StockInfo(array.get(i), start, end, dateInterval);
 
 					rStock.setText(array.get(i));
-					ArrayList<Double> list2 = new ArrayList<Double>(stockRData.getPrices());
+					ArrayList<Double> list2 = new ArrayList<Double>(stockRData.getPercentChanges());
 
 					calculate(false, true);
 
