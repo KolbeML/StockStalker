@@ -142,10 +142,15 @@ public class StockInfo {
 	public List<Double> GetPrices() {
 
 		List<Double> prices = new ArrayList<Double>();
-
+		
+		double lastPrice = history.get(0).getClose().doubleValue();;
 		for (int i = 0; i < history.size(); i++) {
 
-			prices.add(history.get(i).getClose().doubleValue());
+			if( history.get(i).getClose() != null ) {
+				lastPrice = history.get(i).getClose().doubleValue();
+			}
+			
+			prices.add(lastPrice);
 
 		}
 
