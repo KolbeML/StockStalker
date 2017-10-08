@@ -51,6 +51,8 @@ public class Main extends Application {
 	private Text investRText;
 	private Text rStock;
 	private Text lStock;
+	private TextField rSearch;
+	private TextField lSearch;
 	private Text lDifference;
 	private Text rDifference;
 	private Text lPercent;
@@ -110,8 +112,8 @@ public class Main extends Application {
 		investInput = new TextField("0");
 		
 		//Search Fields
-		TextField rSearch = new TextField();
-		TextField lSearch = new TextField();
+		rSearch = new TextField();
+		lSearch = new TextField();
 		
 		// Sets up the chart
 		final NumberAxis xAxis = new NumberAxis();
@@ -221,7 +223,13 @@ public class Main extends Application {
 
 					stockLData = new StockInfo(array.get(i), start, end, dateInterval);
 					lStock.setText(array.get(i));
-
+					
+					//if the search text is NOT a <part> of the selected item or it is empty,
+					//we are going to update it
+					if(   !array.get(i).startsWith(  lSearch.textProperty().get()  ) || lSearch.textProperty().get().equals("")   ) {
+						lSearch.textProperty().set(array.get(i));
+					}
+					
 					ArrayList<Double> list2 = new ArrayList<Double>();
 					if (percent) {
 						list2 = new ArrayList<Double>(stockLData.getPercentChanges());
@@ -244,10 +252,15 @@ public class Main extends Application {
 				if (array.get(i).equals(rightStockList.getSelectionModel().getSelectedItem())) {
 
 					stockRData = new StockInfo(array.get(i), start, end, dateInterval);
-
 					rStock.setText(array.get(i));
+					
+					//if the search text is NOT a <part> of the selected item OR it is empty,
+					//we are going to update it
+					if(   !array.get(i).startsWith(  rSearch.textProperty().get()  ) || rSearch.textProperty().get().equals("")   ) {
+						rSearch.textProperty().set(array.get(i));
+					}
+					
 					ArrayList<Double> list2 = new ArrayList<Double>();
-
 					if (percent) {
 						list2 = new ArrayList<Double>(stockRData.getPercentChanges());
 					} else {
