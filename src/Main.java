@@ -56,7 +56,7 @@ public class Main extends Application {
 	private NumberAxis yAxis;
 
 	private double investment;
-	
+
 	private boolean percent;
 
 	// stock info
@@ -82,7 +82,7 @@ public class Main extends Application {
 		HBox titlePane = new HBox();
 		VBox left = new VBox();
 		VBox right = new VBox();
-		
+
 		percent = true;
 
 		investLText = new Text();
@@ -97,7 +97,7 @@ public class Main extends Application {
 
 		TextField rSearch = new TextField();
 		TextField lSearch = new TextField();
-		
+
 		Button change = new Button("Price");
 
 		// Sets up the chart
@@ -130,59 +130,55 @@ public class Main extends Application {
 		// DATE STUFF
 		startDate = new DatePicker();
 		endDate = new DatePicker();
-		
+
 		Callback<DatePicker, DateCell> dayCellFactoryStart = new Callback<DatePicker, DateCell>() {
-			
-			public DateCell call( final DatePicker datePicker) {
-				
+
+			public DateCell call(final DatePicker datePicker) {
+
 				return new DateCell() {
-					
+
 					@Override
 					public void updateItem(LocalDate item, boolean empty) {
 						super.updateItem(item, empty);
-						
-						//disable future dates
-						if(item.isAfter(LocalDate.now().minusDays(1))) {
+
+						// disable future dates
+						if (item.isAfter(LocalDate.now().minusDays(1))) {
 							this.setDisable(true);
 						}
 					}
-					
+
 				};
-				
+
 			}
-			
+
 		};
 		Callback<DatePicker, DateCell> dayCellFactoryEnd = new Callback<DatePicker, DateCell>() {
-			
-			public DateCell call( final DatePicker datePicker) {
-				
+
+			public DateCell call(final DatePicker datePicker) {
+
 				return new DateCell() {
-					
+
 					@Override
 					public void updateItem(LocalDate item, boolean empty) {
 						super.updateItem(item, empty);
-						
-						//disable future dates
-						if(item.isAfter(LocalDate.now())) {
+
+						// disable future dates
+						if (item.isAfter(LocalDate.now())) {
 							this.setDisable(true);
 						}
 					}
-					
+
 				};
-				
+
 			}
-			
+
 		};
-		
+
 		startDate.setDayCellFactory(dayCellFactoryStart);
 		endDate.setDayCellFactory(dayCellFactoryEnd);
-		
-		
-		ObservableList<String> intervals = FXCollections.observableArrayList(
-				DateInterval.MONTHLY.getStr(),
-				DateInterval.WEEKLY.getStr(),
-				DateInterval.DAILY.getStr()
-		    );
+
+		ObservableList<String> intervals = FXCollections.observableArrayList(DateInterval.MONTHLY.getStr(),
+				DateInterval.WEEKLY.getStr(), DateInterval.DAILY.getStr());
 		interval = new ComboBox<String>(intervals);
 		interval.getSelectionModel().select(0);
 		dateInterval = DateInterval.valueOf(interval.getSelectionModel().getSelectedItem()).getVal();
@@ -206,12 +202,12 @@ public class Main extends Application {
 
 					stockLData = new StockInfo(array.get(i), start, end, dateInterval);
 					lStock.setText(array.get(i));
-					
+
 					ArrayList<Double> list2 = new ArrayList<Double>();
-					if(percent) {
+					if (percent) {
 						list2 = new ArrayList<Double>(stockLData.getPercentChanges());
-					}else {
-						list2 = new ArrayList<Double>(stockLData.GetPrices());
+					} else {
+						list2 = new ArrayList<Double>(stockLData.getPrices());
 					}
 
 					calculate(true, false);
@@ -232,11 +228,11 @@ public class Main extends Application {
 
 					rStock.setText(array.get(i));
 					ArrayList<Double> list2 = new ArrayList<Double>();
-					
-					if(percent) {
+
+					if (percent) {
 						list2 = new ArrayList<Double>(stockRData.getPercentChanges());
-					}else {
-						list2 = new ArrayList<Double>(stockRData.GetPrices());
+					} else {
+						list2 = new ArrayList<Double>(stockRData.getPrices());
 					}
 					calculate(false, true);
 
@@ -270,20 +266,20 @@ public class Main extends Application {
 		dataPane.setHgap(5);
 		dataPane.add(change, 4, 0);
 
-		change.setOnAction(e->{
-			 if(percent) {
-				 percent = false;
-				 change.setText("Percentage");
-				 yAxis.setLabel("Price");
-				 updateLists();
-			 }else {
-				 percent = true;
-				 change.setText("Price");
-				 yAxis.setLabel("Percentage");
-				 updateLists();
-			 }
+		change.setOnAction(e -> {
+			if (percent) {
+				percent = false;
+				change.setText("Percentage");
+				yAxis.setLabel("Price");
+				updateLists();
+			} else {
+				percent = true;
+				change.setText("Price");
+				yAxis.setLabel("Percentage");
+				updateLists();
+			}
 		});
-		
+
 		// ----INTERVAL AND DATES----
 		interval.setOnAction(e -> {
 
@@ -377,7 +373,7 @@ public class Main extends Application {
 			double difference = StockInfo.getValueChange(investment, profitL.get(profitL.size() - 1));
 			lDifference.setText((difference < 0 ? "-$" : "$") + df.format(Math.abs(difference)));
 			double percent = StockInfo.getPercentChange(investment, profitL.get(profitL.size() - 1));
-			lPercent.setText(df.format(percent*100.0) + "%");
+			lPercent.setText(df.format(percent * 100.0) + "%");
 
 		}
 		if (right) {
@@ -386,7 +382,7 @@ public class Main extends Application {
 			double difference = StockInfo.getValueChange(investment, profitR.get(profitR.size() - 1));
 			rDifference.setText((difference < 0 ? "-$" : "$") + df.format(Math.abs(difference)));
 			double percent = StockInfo.getPercentChange(investment, profitR.get(profitR.size() - 1));
-			rPercent.setText(df.format(percent*100.0) + "%");
+			rPercent.setText(df.format(percent * 100.0) + "%");
 
 		}
 
