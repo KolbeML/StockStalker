@@ -184,9 +184,7 @@ public class StockInfo {
 		double percent = percentDiff(0);
 		for (int i = 0; i < history.size(); i++) {
 
-			if (history.get(i).getClose() != null) {
-				percent = percentDiff(i);
-			}
+			percent = percentDiff(i);
 
 			percents.add(percent);
 

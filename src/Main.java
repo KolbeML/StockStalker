@@ -399,12 +399,12 @@ public class Main extends Application {
 		int index = leftStockList.getSelectionModel().getSelectedIndex();
 
 		leftStockList.getSelectionModel().clearSelection();
-		leftStockList.getSelectionModel().clearAndSelect(index);
+		leftStockList.getSelectionModel().select(index);
 
 		index = rightStockList.getSelectionModel().getSelectedIndex();
 
 		rightStockList.getSelectionModel().clearSelection();
-		rightStockList.getSelectionModel().clearAndSelect(index);
+		rightStockList.getSelectionModel().select(index);
 
 	}
 
