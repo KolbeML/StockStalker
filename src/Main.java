@@ -99,6 +99,7 @@ public class Main extends Application {
 		TextField lSearch = new TextField();
 
 		Button change = new Button("Price");
+		change.getStyleClass().add("stocker-button");
 
 		// Sets up the chart
 		final NumberAxis xAxis = new NumberAxis();
@@ -111,7 +112,7 @@ public class Main extends Application {
 
 		StockLists.readFile();
 		ArrayList<String> array = StockLists.getStocks();
-
+		
 		// Sets up the lists
 		ObservableList<String> stocks = FXCollections.observableArrayList(array);
 		leftStockList = new ListView<String>(stocks);
@@ -180,7 +181,7 @@ public class Main extends Application {
 		ObservableList<String> intervals = FXCollections.observableArrayList(DateInterval.MONTHLY.getStr(),
 				DateInterval.WEEKLY.getStr(), DateInterval.DAILY.getStr());
 		interval = new ComboBox<String>(intervals);
-		interval.getSelectionModel().select(0);
+		interval.getSelectionModel().clearAndSelect(0);
 		dateInterval = DateInterval.valueOf(interval.getSelectionModel().getSelectedItem()).getVal();
 
 		startDate.setMinWidth(100.0);
@@ -195,7 +196,9 @@ public class Main extends Application {
 		startDate.setValue(dateTime.toLocalDate());
 		dateTime = new Date(end.getTimeInMillis());
 		endDate.setValue(dateTime.toLocalDate());
-
+		
+		
+		// ----SELECTING STOCKS FROM THE LISTS----
 		leftStockList.getSelectionModel().selectedItemProperty().addListener(e -> {
 			for (Integer i : leftStockList.getSelectionModel().getSelectedIndices()) {
 				if (array.get(i).equals(leftStockList.getSelectionModel().getSelectedItem())) {
@@ -245,9 +248,9 @@ public class Main extends Application {
 		});
 
 		// select initial values
-		leftStockList.getSelectionModel().select(0);
-		rightStockList.getSelectionModel().select(1);
-
+		leftStockList.getSelectionModel().clearAndSelect(0);
+		rightStockList.getSelectionModel().clearAndSelect(1);
+		
 		dataPane.add(new Text("Investment Amount"), 0, 0);
 		dataPane.add(investInput, 0, 1);
 		dataPane.add(lStock, 0, 3);
@@ -315,7 +318,7 @@ public class Main extends Application {
 		rSearch.textProperty().addListener((obs, oldText, newText) -> {
 			for (int i = 0; i < array.size(); i++) {
 				if (array.get(i).startsWith(newText.toUpperCase())) {
-					rightStockList.getSelectionModel().select(i);
+					rightStockList.getSelectionModel().clearAndSelect(i);
 					rightStockList.scrollTo(i);
 					break;
 				}
@@ -326,7 +329,7 @@ public class Main extends Application {
 		lSearch.textProperty().addListener((obs, oldText, newText) -> {
 			for (int i = 0; i < array.size(); i++) {
 				if (array.get(i).startsWith(newText.toUpperCase())) {
-					leftStockList.getSelectionModel().select(i);
+					leftStockList.getSelectionModel().clearAndSelect(i);
 					leftStockList.scrollTo(i);
 					break;
 				}
@@ -344,8 +347,10 @@ public class Main extends Application {
 		infoPane.add(endDate, 2, 0);
 		GridPane.setHalignment(endDate, HPos.RIGHT);
 		infoPane.setPadding(new Insets(5));
-
-		titlePane.getChildren().add(new Text("Stock Stalker"));
+		
+		Text title = new Text("Stock Stalker");
+		title.setId("title-text");
+		titlePane.getChildren().add(title);
 		titlePane.setAlignment(Pos.CENTER);
 		titlePane.setPadding(new Insets(5));
 
@@ -356,6 +361,7 @@ public class Main extends Application {
 		root.setBottom(dataPane);
 
 		Scene scene = new Scene(root, 1000, 600);
+		scene.getStylesheets().add("resources/style.css");
 		primary.setScene(scene);
 		primary.show();
 	}
@@ -393,12 +399,12 @@ public class Main extends Application {
 		int index = leftStockList.getSelectionModel().getSelectedIndex();
 
 		leftStockList.getSelectionModel().clearSelection();
-		leftStockList.getSelectionModel().select(index);
+		leftStockList.getSelectionModel().clearAndSelect(index);
 
 		index = rightStockList.getSelectionModel().getSelectedIndex();
 
 		rightStockList.getSelectionModel().clearSelection();
-		rightStockList.getSelectionModel().select(index);
+		rightStockList.getSelectionModel().clearAndSelect(index);
 
 	}
 

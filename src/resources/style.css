@@ -1,0 +1,17 @@
+
+#title-text {
+	-fx-font-size: 24px;
+}
+
+.stocker-button {
+    -fx-background-color: rgb(85, 120, 170);
+    -fx-border-color: rgb(10, 20, 50);
+    -fx-border-radius: 5px;
+    -fx-padding: 3 6 6 6;
+}
+
+.stocker-pane {
+	-fx-background-color: rgb(85, 120, 170);
+	-fx-border-color: rgb(10, 20, 50);
+	-fx-border-radius: 5px;
+}
