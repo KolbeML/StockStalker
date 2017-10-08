@@ -4,7 +4,7 @@ import java.util.*;
 public class StockLists {
 	public static ArrayList<String> names = new ArrayList<String>();
 
-	private static String fileName = "resources/stockNames.txt";
+	private static String fileName = "src/resources/stockNames.txt";
 
 	public static void readFile() {
 		try {
@@ -20,5 +20,10 @@ public class StockLists {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+	}
+
+	protected static ArrayList<String> getStocks() {
+		return names;
 	}
 }
