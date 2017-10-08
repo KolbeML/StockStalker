@@ -38,7 +38,7 @@ public class Main extends Application{
 
 
 		/*
-    	 Calendar from = Calendar.getInstance();
+    	 	Calendar from = Calendar.getInstance();
 		from.add(Calendar.YEAR, -10);
 		Calendar to = Calendar.getInstance();
 
@@ -49,7 +49,7 @@ public class Main extends Application{
 		double investment = 5000.00;
 
 
-		List<Double> profitData = GetProfitInfo(test, investment);
+		List<Double> profitData = test.GetProfitInfo(investment);
 		for(int i = 0; i < profitData.size(); i++) {
 
 			System.out.println( profitData.get(i) );
@@ -192,23 +192,5 @@ public class Main extends Application{
 	}
 
 	public static void main(String[]args){launch(args);}
-
-	public static List<Double> GetProfitInfo(StockInfo stock, double investment) {
-
-		List<Double> profits = new ArrayList<Double>();
-
-		double profit = investment;
-		for(int i = 0; i < stock.GetHistory().size(); i++) {
-
-			profit *= ( 1 + stock.PercentDiff(i) );
-
-			profits.add(profit);
-
-		}
-
-		return profits;
-
-
-	}
 
 }

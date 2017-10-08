@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
@@ -53,7 +54,6 @@ public class StockInfo {
 			
 			history = stock.getHistory();
 			
-			boolean dateModified = false;
 			for( Iterator<HistoricalQuote> iter = history.iterator(); iter.hasNext();){
 				
 				HistoricalQuote item = iter.next();
@@ -63,7 +63,6 @@ public class StockInfo {
 					// if this is the starting item, and it is null
 					// we can't use it
 					iter.remove();
-					dateModified = true;
 					
 				}
 				
@@ -117,6 +116,43 @@ public class StockInfo {
 		}
 		
 		return percent;
+		
+	}
+	
+	
+	/*
+	 * Get the profit info over time
+	 */
+	public List<Double> GetProfitInfo(double initialInvestment) {
+
+		List<Double> profits = new ArrayList<Double>();
+
+		double profit = initialInvestment;
+		for(int i = 0; i < history.size(); i++) {
+
+			profit *= ( 1 + PercentDiff(i) );
+
+			profits.add(profit);
+
+		}
+
+		return profits;
+
+
+	}
+	
+	
+	public List<Double> GetPrices() {
+		
+		List<Double> prices = new ArrayList<Double>();
+		
+		for(int i = 0; i < history.size(); i++) {
+
+			prices.add( history.get(i).getClose().doubleValue() );
+
+		}
+
+		return prices;
 		
 	}
 	
