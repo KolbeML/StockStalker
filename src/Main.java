@@ -88,7 +88,7 @@ public class Main extends Application {
 		VBox right = new VBox();
 
 		//Icon & title
-		primary.getIcons().add(new Image("justicon.PNG"));
+		primary.getIcons().add(new Image("transparent_icon.PNG"));
         primary.setTitle("StockStalker");
 		
 		//Toggle value and button
