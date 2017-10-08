@@ -107,7 +107,7 @@ public class StockInfo {
 
 			// calculate the percent
 			// differenceInValue divided by lastValue times
-			percent = (value - lastValue) / lastValue;
+			percent = getPercentChange(lastValue, value);
 
 		}
 
@@ -124,13 +124,13 @@ public class StockInfo {
 
 		double profit = initialInvestment;
 		int number = (int) (profit / history.get(0).getClose().doubleValue());
-		double leftover = profit - (double) (history.get(0).getClose().doubleValue() * number);
+		double leftover = getValueChange(profit, (double) (history.get(0).getClose().doubleValue() * number));
 
 		for (int i = 0; i < history.size(); i++) {
 			profit = (profit - leftover) * (1 + percentDiff(i)) + leftover;
 			if (percentDiff(i) != 0 && leftover > history.get(i).getClose().doubleValue()) {
 				number += (int) (leftover / history.get(i).getClose().doubleValue());
-				leftover = profit - (double) number * history.get(i).getClose().doubleValue();
+				leftover = getValueChange(profit, (double) (history.get(0).getClose().doubleValue() * number));
 			}
 			profits.add(profit);
 		}
@@ -159,12 +159,12 @@ public class StockInfo {
 
 	}
 
-	public static double getTotalChange(double initialInvestment, double finalValue) {
-		return finalValue - initialInvestment;
+	public static double getValueChange(double initial, double fin) {
+		return fin - initial;
 	}
 
-	public static double getTotalPercentChange(double initialInvestment, double finalValue) {
-		return getTotalChange(initialInvestment, finalValue) * 100.0 / initialInvestment;
+	public static double getPercentChange(double initial, double fin) {
+		return getValueChange(initial, fin)/initial;
 	}
 
 }

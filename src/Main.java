@@ -297,19 +297,19 @@ public class Main extends Application {
 			// right or both
 			ArrayList<Double> profitL = new ArrayList<Double>(stockLData.GetProfitInfo(investment));
 			investLText.setText("$" + df.format(profitL.get(profitL.size() - 1)) + "");
-			double difference = StockInfo.getTotalChange(investment, profitL.get(profitL.size() - 1));
+			double difference = StockInfo.getValueChange(investment, profitL.get(profitL.size() - 1));
 			lDifference.setText((difference < 0 ? "-$" : "$") + df.format(Math.abs(difference)));
-			double percent = StockInfo.getTotalPercentChange(investment, profitL.get(profitL.size() - 1));
-			lPercent.setText(df.format(percent) + "%");
+			double percent = StockInfo.getPercentChange(investment, profitL.get(profitL.size() - 1));
+			lPercent.setText(df.format(percent*100.0) + "%");
 
 		}
 		if (right) {
 			ArrayList<Double> profitR = new ArrayList<Double>(stockRData.GetProfitInfo(investment));
 			investRText.setText("$" + df.format(profitR.get(profitR.size() - 1)) + "");
-			double difference = StockInfo.getTotalChange(investment, profitR.get(profitR.size() - 1));
+			double difference = StockInfo.getValueChange(investment, profitR.get(profitR.size() - 1));
 			rDifference.setText((difference < 0 ? "-$" : "$") + df.format(Math.abs(difference)));
-			double percent = StockInfo.getTotalPercentChange(investment, profitR.get(profitR.size() - 1));
-			rPercent.setText(df.format(percent) + "%");
+			double percent = StockInfo.getPercentChange(investment, profitR.get(profitR.size() - 1));
+			rPercent.setText(df.format(percent*100.0) + "%");
 
 		}
 
