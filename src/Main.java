@@ -12,12 +12,12 @@ public class Main {
 	public static void main(String[] args) {
 		
 		Calendar from = Calendar.getInstance();
-		from.add(Calendar.YEAR, -5); // from 5 years ago
+		from.add(Calendar.YEAR, -10);
 		Calendar to = Calendar.getInstance();
 		
-		StockInfo test = new StockInfo("TSLA", from, to, Interval.WEEKLY);
+		StockInfo test = new StockInfo("BTCUSD=X", from, to, Interval.WEEKLY);
 		
-		//test.PrintHistory();
+		test.PrintHistory();
 		
 		double investment = 5000.00;
 		

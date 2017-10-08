@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -52,6 +53,24 @@ public class StockInfo {
 			
 			history = stock.getHistory();
 			
+			boolean dateModified = false;
+			for( Iterator<HistoricalQuote> iter = history.iterator(); iter.hasNext();){
+				
+				HistoricalQuote item = iter.next();
+				
+				int index = history.indexOf(item);
+				if(item.getClose() == null && index == 0) {
+					// if this is the starting item, and it is null
+					// we can't use it
+					iter.remove();
+					dateModified = true;
+					
+				}
+				
+			}
+			
+			this.fromDate = history.get(0).getDate();
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -86,7 +105,7 @@ public class StockInfo {
 		
 		double percent = 0.0;
 		
-		if(index != 0) {
+		if(  index > 0 && history.get(index).getClose() != null && history.get(index - 1).getClose() != null  ) {
 			
 			double lastValue = history.get(index-1).getClose().doubleValue();
 			double value = history.get(index).getClose().doubleValue();
