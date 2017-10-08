@@ -1,7 +1,10 @@
 import java.util.ArrayList;
 import java.text.*;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -20,12 +23,14 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 import java.io.IOException;
+import java.sql.Date;
 
 import yahoofinance.*;
 import yahoofinance.histquotes.HistoricalQuote;
@@ -39,8 +44,8 @@ public class Main extends Application{
 	private ListView<String> leftStockList;
 	private ListView<String> rightStockList;
 	private LineChart<Number,Number> chart;
-	private ComboBox<String> startDate;
-	private ComboBox<String> endDate;
+	private DatePicker startDate;
+	private DatePicker endDate;
 	private ComboBox<String> interval;
 	private GridPane dataPane;
 	private TextField investInput;
@@ -53,8 +58,14 @@ public class Main extends Application{
 	
 	private double investment;
 	
+	//stock info
+	private Calendar start;
+	private Calendar end;
+	private Interval dateInterval;
+	
 	private StockInfo stockLData;
 	private StockInfo stockRData;
+	
 	
 	
 	/* (non-Javadoc)
@@ -85,7 +96,7 @@ public class Main extends Application{
 		final NumberAxis xAxis = new NumberAxis();
 		final NumberAxis yAxis = new NumberAxis();
 		xAxis.setLabel("Time Interval");
-		xAxis.setTickMarkVisible(false);
+		xAxis.setTickLabelsVisible(false);
 		yAxis.setLabel("Percentage");
 		chart = new LineChart<Number, Number>(xAxis,yAxis);
 		chart.setTitle("Stock Comparison");
@@ -109,23 +120,42 @@ public class Main extends Application{
 		
 		
 		
-
-		startDate = new ComboBox<String>();
-		endDate = new ComboBox<String>();
-		interval = new ComboBox<String>();
+		// DATE STUFF
+		startDate = new DatePicker();
+		endDate = new DatePicker();
+		
+		ObservableList intervals = FXCollections.observableArrayList(
+				DateInterval.MONTHLY.getStr(),
+				DateInterval.WEEKLY.getStr(),
+				DateInterval.DAILY.getStr()
+		    );
+		interval = new ComboBox<String>(intervals);
+		interval.getSelectionModel().select(0);
+		dateInterval = DateInterval.valueOf( interval.getSelectionModel().getSelectedItem() ).getVal();
+		
+		startDate.setMinWidth(100.0);
+		endDate.setMinWidth(100.0);
+		interval.setMinWidth(85.0);
+		
+		start = Calendar.getInstance();
+		start.add(Calendar.YEAR, -1);
+		end = Calendar.getInstance();
+		
+		Date dateTime = new Date(start.getTimeInMillis());
+		startDate.setValue( dateTime.toLocalDate() );
+		dateTime = new Date(end.getTimeInMillis());
+		endDate.setValue( dateTime.toLocalDate() );	
+		
 
 		leftStockList.getSelectionModel().selectedItemProperty().addListener(e->{
 			for(Integer i: leftStockList.getSelectionModel().getSelectedIndices()) {
 				if(array.get(i).equals(leftStockList.getSelectionModel().getSelectedItem())) {
 
-					Calendar start = Calendar.getInstance();
-					start.add(Calendar.YEAR, -3);
-					Calendar end = Calendar.getInstance();
-					stockLData = new StockInfo(array.get(i),start,end,Interval.MONTHLY);
+					stockLData = new StockInfo(array.get(i), start, end, dateInterval);
 					lStock.setText(array.get(i));
 					ArrayList<Double> list2 = new ArrayList<Double>(stockLData.GetPrices());
 					
-					Calculate(true, false);
+					calculate(true, false);
 					
 					leftStock = setData(array.get(i), list2, leftStock);
 					
@@ -138,15 +168,13 @@ public class Main extends Application{
 		rightStockList.getSelectionModel().selectedItemProperty().addListener(e->{
 			for(Integer i: rightStockList.getSelectionModel().getSelectedIndices()) {
 				if(array.get(i).equals(rightStockList.getSelectionModel().getSelectedItem())) {
-					Calendar start = Calendar.getInstance();
-					start.add(Calendar.YEAR, -3);
-					Calendar end = Calendar.getInstance();
-					stockRData = new StockInfo(array.get(i),start,end,Interval.MONTHLY);
+					
+					stockRData = new StockInfo(array.get(i), start, end, dateInterval);
 					
 					rStock.setText(array.get(i));
 					ArrayList<Double> list2 = new ArrayList<Double>(stockRData.GetPrices());
 					
-					Calculate(false, true);
+					calculate(false, true);
 					
 					rightStock = setData(array.get(i), list2, rightStock);
 					
@@ -169,11 +197,33 @@ public class Main extends Application{
 		dataPane.add(investRText, 1, 4);
 		
 		
+		// ----INTERVAL AND DATES----
+		interval.setOnAction(e -> {
+			
+			dateInterval = DateInterval.valueOf( interval.getSelectionModel().getSelectedItem() ).getVal();
+			updateLists();
+			
+		});
 		
+		startDate.valueProperty().addListener(event -> {
+		    java.util.Date date = Date.from( startDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant() );
+		    start = Calendar.getInstance();
+		    start.setTime(date);
+		    updateLists();    
+		});
+		
+		endDate.valueProperty().addListener(event -> {
+		    java.util.Date date = Date.from( startDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant() );
+		    end = Calendar.getInstance();
+		    end.setTime(date);
+		    updateLists();
+		});
+		
+		// ---CALCULATE TEXT---
 		investInput.textProperty().addListener( (obs, oldText, newText) -> {
 			if( Main.isNumber(newText) ) {
 				
-				Calculate(true, true);
+				calculate(true, true);
 				
 			}
 		});
@@ -182,7 +232,7 @@ public class Main extends Application{
 		// -----SEARCH------
 		rSearch.textProperty().addListener( (obs, oldText, newText) -> {
 			for(int i = 0; i < array.size(); i++) {
-				if(  array.get(i).startsWith( newText )  ) {
+				if(  array.get(i).startsWith( newText.toUpperCase() )  ) {
 					rightStockList.getSelectionModel().select(i);
 					rightStockList.scrollTo(i);
 					break;
@@ -193,7 +243,7 @@ public class Main extends Application{
 		
 		lSearch.textProperty().addListener( (obs, oldText, newText) -> {
 			for(int i = 0; i < array.size(); i++) {
-				if(array.get(i).startsWith( newText )) {
+				if(array.get(i).startsWith( newText.toUpperCase() )) {
 					leftStockList.getSelectionModel().select(i);
 					leftStockList.scrollTo(i);
 					break;
@@ -205,11 +255,14 @@ public class Main extends Application{
 		
 		
 		//infoPane.add(new Text("test"), x, y);
-		infoPane.add(chart, 1, 1);
+		infoPane.add(chart, 0, 1);
+		infoPane.setColumnSpan(chart, GridPane.REMAINING);
 		infoPane.add(startDate, 0, 0);
-		infoPane.add(endDate, 2, 0);
+		infoPane.setHalignment(startDate, HPos.LEFT);
 		infoPane.add(interval, 1, 0);
 		infoPane.setHalignment(interval,HPos.CENTER);
+		infoPane.add(endDate, 2, 0);
+		infoPane.setHalignment(endDate, HPos.RIGHT);
 
 		titlePane.getChildren().add(new Text("Stock Stocker"));
 		titlePane.setAlignment(Pos.CENTER);
@@ -226,7 +279,7 @@ public class Main extends Application{
 	}
 	
 	
-	protected void Calculate(boolean left, boolean right) {
+	protected void calculate(boolean left, boolean right) {
 		
 		DecimalFormat df = new DecimalFormat("#.00"); 
 		
@@ -241,6 +294,22 @@ public class Main extends Application{
 			ArrayList<Double> profitR = new ArrayList<Double>(stockRData.GetProfitInfo(investment));
 			investRText.setText("$" + df.format(profitR.get(profitR.size()-1))+"");
 		}
+		
+	}
+	
+	
+	protected void updateLists() {
+		
+		int index = leftStockList.getSelectionModel().getSelectedIndex();
+		
+		leftStockList.getSelectionModel().clearSelection();
+		leftStockList.getSelectionModel().select(index);
+		
+		
+		index = rightStockList.getSelectionModel().getSelectedIndex();
+		
+		rightStockList.getSelectionModel().clearSelection();
+		rightStockList.getSelectionModel().select(index);
 		
 	}
 	

@@ -11,6 +11,7 @@ import yahoofinance.YahooFinance;
 import yahoofinance.histquotes.HistoricalQuote;
 import yahoofinance.histquotes.Interval;
 
+
 public class StockInfo {
 
 	private Calendar fromDate, toDate;
