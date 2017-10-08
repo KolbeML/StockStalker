@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
 
-
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -47,18 +46,10 @@ public class Main extends Application {
 	private ComboBox<String> interval;
 	private GridPane dataPane;
 	private TextField investInput;
-	private Text investLText;
-	private Text investRText;
-	private Text rStock;
-	private Text lStock;
-	private TextField rSearch;
+	private Text[] investmentTexts;
 	private TextField lSearch;
-	private Text lDifference;
-	private Text rDifference;
-	private Text lPercent;
-	private Text rPercent;
-	private Text lPrice;
-	private Text rPrice;
+	private TextField rSearch;
+
 	private NumberAxis yAxis;
 
 	private double investment = 100.0;
@@ -98,22 +89,17 @@ public class Main extends Application {
 		Button change = new Button("Price");
 		change.getStyleClass().add("stocker-button");
 
-		//Data Text
-		investLText = new Text();
-		investRText = new Text();
-		lStock = new Text();
-		rStock = new Text();
-		lDifference = new Text();
-		rDifference = new Text();
-		lPercent = new Text();
-		rPercent = new Text();
-		lPrice = new Text();
-		rPrice = new Text();
+		//Data Texts
+		investmentTexts = new Text[14];
+		for(int i = 0; i < investmentTexts.length; i++) {
+			investmentTexts[i] = new Text("0");
+		}
 		investInput = new TextField("0");
 		
 		//Search Fields
 		rSearch = new TextField();
 		lSearch = new TextField();
+
 		
 		// Sets up the chart
 		final NumberAxis xAxis = new NumberAxis();
@@ -222,7 +208,8 @@ public class Main extends Application {
 				if (array.get(i).equals(leftStockList.getSelectionModel().getSelectedItem())) {
 
 					stockLData = new StockInfo(array.get(i), start, end, dateInterval);
-					lStock.setText(array.get(i));
+					
+					investmentTexts[TextItems.L_STOCK.val()].setText(array.get(i));
 					
 					//if the search text is NOT a <part> of the selected item or it is empty,
 					//we are going to update it
@@ -252,7 +239,8 @@ public class Main extends Application {
 				if (array.get(i).equals(rightStockList.getSelectionModel().getSelectedItem())) {
 
 					stockRData = new StockInfo(array.get(i), start, end, dateInterval);
-					rStock.setText(array.get(i));
+					
+					investmentTexts[TextItems.R_STOCK.val()].setText(array.get(i));
 					
 					//if the search text is NOT a <part> of the selected item OR it is empty,
 					//we are going to update it
@@ -291,26 +279,16 @@ public class Main extends Application {
 				x++;
 				y = 2;
 			}
-			
 			panes[i].getStyleClass().add("stocker-pane");
+			panes[i].getChildren().add(investmentTexts[i]);
 			dataPane.add(panes[i], x, y);
 			y++;
 		}
 		
-		panes[0].getChildren().add(lStock);
-		panes[1].getChildren().add(rStock);
-		panes[2].getChildren().add(new Text("Return"));
-		panes[3].getChildren().add(investLText);
-		panes[4].getChildren().add(investRText);
-		panes[5].getChildren().add(new Text("Gain/Loss"));
-		panes[6].getChildren().add(lDifference);
-		panes[7].getChildren().add(rDifference);
-		panes[8].getChildren().add(new Text("Percent Change"));
-		panes[9].getChildren().add(lPercent);
-		panes[10].getChildren().add(rPercent);
-		panes[11].getChildren().add(new Text("Stock Price"));
-		panes[12].getChildren().add(lPrice);
-		panes[13].getChildren().add(rPrice);
+		investmentTexts[TextItems.RETURNS.val()].setText("Return");
+		investmentTexts[TextItems.GAIN_LOSS.val()].setText("Gain/Loss");
+		investmentTexts[TextItems.PERCENT_CHANGE.val()].setText("Percent Change");
+		investmentTexts[TextItems.STOCK_PRICE.val()].setText("Stock Price");
 		
 		dataPane.add(new Text("Investment Amount"), 0, 0);
 		dataPane.add(investInput, 0, 1);
@@ -423,22 +401,22 @@ public class Main extends Application {
 		if (left) {
 			// right or both
 			ArrayList<Double> profitL = new ArrayList<Double>(stockLData.getProfitInfo(investment));
-			investLText.setText("$" + df.format(profitL.get(profitL.size() - 1)) + "");
+			investmentTexts[TextItems.L_PROFIT.val()].setText("$" + df.format(profitL.get(profitL.size() - 1)) + "");
 			double difference = StockInfo.getValueChange(investment, profitL.get(profitL.size() - 1));
-			lDifference.setText((difference < 0 ? "-$" : "$") + df.format(Math.abs(difference)));
+			investmentTexts[TextItems.L_DIFFERENCE.val()].setText((difference < 0 ? "-$" : "$") + df.format(Math.abs(difference)));
 			double percent = StockInfo.getPercentChange(investment, profitL.get(profitL.size() - 1));
-			lPercent.setText(df.format(percent * 100.0) + "%");
-			setPrice(lPrice,stockLData);
+			investmentTexts[TextItems.L_PERCENT.val()].setText(df.format(percent * 100.0) + "%");
+			setPrice(investmentTexts[TextItems.L_PRICE.val()],stockLData);
 
 		}
 		if (right) {
 			ArrayList<Double> profitR = new ArrayList<Double>(stockRData.getProfitInfo(investment));
-			investRText.setText("$" + df.format(profitR.get(profitR.size() - 1)) + "");
+			investmentTexts[TextItems.R_PROFIT.val()].setText("$" + df.format(profitR.get(profitR.size() - 1)) + "");
 			double difference = StockInfo.getValueChange(investment, profitR.get(profitR.size() - 1));
-			rDifference.setText((difference < 0 ? "-$" : "$") + df.format(Math.abs(difference)));
+			investmentTexts[TextItems.R_DIFFERENCE.val()].setText((difference < 0 ? "-$" : "$") + df.format(Math.abs(difference)));
 			double percent = StockInfo.getPercentChange(investment, profitR.get(profitR.size() - 1));
-			rPercent.setText(df.format(percent * 100.0) + "%");
-			setPrice(rPrice,stockRData);
+			investmentTexts[TextItems.R_PERCENT.val()].setText(df.format(percent * 100.0) + "%");
+			setPrice(investmentTexts[TextItems.R_PRICE.val()],stockRData);
 
 		}
 
