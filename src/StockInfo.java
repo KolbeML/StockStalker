@@ -11,7 +11,6 @@ import yahoofinance.YahooFinance;
 import yahoofinance.histquotes.HistoricalQuote;
 import yahoofinance.histquotes.Interval;
 
-
 public class StockInfo {
 
 	private Calendar fromDate, toDate;
@@ -22,7 +21,7 @@ public class StockInfo {
 
 	private List<HistoricalQuote> history;
 
-	public List<HistoricalQuote> GetHistory() {
+	public List<HistoricalQuote> getHistory() {
 		return history;
 	}
 
@@ -31,17 +30,17 @@ public class StockInfo {
 	 */
 	public StockInfo(String stockName, Calendar fromDate, Calendar toDate, Interval dateInterval) {
 
-		UpdateInfo(stockName, fromDate, toDate, dateInterval);
+		updateInfo(stockName, fromDate, toDate, dateInterval);
 
 	}
 
-	public void UpdateInfo() {
+	public void updateInfo() {
 
-		UpdateInfo(stock.getSymbol(), fromDate, toDate, dateInterval);
+		updateInfo(stock.getSymbol(), fromDate, toDate, dateInterval);
 
 	}
 
-	public void UpdateInfo(String stockName, Calendar fromDate, Calendar toDate, Interval dateInterval) {
+	public void updateInfo(String stockName, Calendar fromDate, Calendar toDate, Interval dateInterval) {
 
 		this.fromDate = fromDate;
 		this.toDate = toDate;
@@ -76,7 +75,7 @@ public class StockInfo {
 
 	}
 
-	public void PrintHistory() {
+	public void printHistory() {
 
 		for (int i = 0; i < history.size(); i++) {
 
@@ -97,7 +96,7 @@ public class StockInfo {
 	/*
 	 * Get the percent difference from the last index to this index
 	 */
-	public double PercentDiff(int index) {
+	public double percentDiff(int index) {
 
 		double percent = 0.0;
 
@@ -128,8 +127,8 @@ public class StockInfo {
 		double leftover = profit - (double) (history.get(0).getClose().doubleValue() * number);
 
 		for (int i = 0; i < history.size(); i++) {
-			profit = (profit - leftover) * (1 + PercentDiff(i)) + leftover;
-			if (PercentDiff(i) != 0 && leftover > history.get(i).getClose().doubleValue()) {
+			profit = (profit - leftover) * (1 + percentDiff(i)) + leftover;
+			if (percentDiff(i) != 0 && leftover > history.get(i).getClose().doubleValue()) {
 				number += (int) (leftover / history.get(i).getClose().doubleValue());
 				leftover = profit - (double) number * history.get(i).getClose().doubleValue();
 			}
@@ -140,17 +139,18 @@ public class StockInfo {
 
 	}
 
-	public List<Double> GetPrices() {
+	public List<Double> getPrices() {
 
 		List<Double> prices = new ArrayList<Double>();
-		
-		double lastPrice = history.get(0).getClose().doubleValue();;
+
+		double lastPrice = history.get(0).getClose().doubleValue();
+		;
 		for (int i = 0; i < history.size(); i++) {
 
-			if( history.get(i).getClose() != null ) {
+			if (history.get(i).getClose() != null) {
 				lastPrice = history.get(i).getClose().doubleValue();
 			}
-			
+
 			prices.add(lastPrice);
 
 		}
@@ -158,12 +158,13 @@ public class StockInfo {
 		return prices;
 
 	}
+
 	public static double getTotalChange(double initialInvestment, double finalValue) {
 		return finalValue - initialInvestment;
 	}
-	
+
 	public static double getTotalPercentChange(double initialInvestment, double finalValue) {
-		return getTotalChange(initialInvestment, finalValue)*100.0/initialInvestment;
+		return getTotalChange(initialInvestment, finalValue) * 100.0 / initialInvestment;
 	}
 
 }
