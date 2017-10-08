@@ -38,14 +38,13 @@ import yahoofinance.*;
 import yahoofinance.histquotes.HistoricalQuote;
 import yahoofinance.histquotes.Interval;
 
-
-public class Main extends Application{
+public class Main extends Application {
 
 	private XYChart.Series<Number, Number> leftStock;
 	private XYChart.Series<Number, Number> rightStock;
 	private ListView<String> leftStockList;
 	private ListView<String> rightStockList;
-	private LineChart<Number,Number> chart;
+	private LineChart<Number, Number> chart;
 	private DatePicker startDate;
 	private DatePicker endDate;
 	private ComboBox<String> interval;
@@ -61,33 +60,33 @@ public class Main extends Application{
 	private Text rDifference;
 	private Text lPercent;
 	private Text rPercent;
-	
+
 	private double investment;
-	
-	//stock info
+
+	// stock info
 	private Calendar start;
 	private Calendar end;
 	private Interval dateInterval;
-	
+
 	private StockInfo stockLData;
 	private StockInfo stockRData;
-	
-	
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javafx.application.Application#start(javafx.stage.Stage)
 	 */
 	@Override
-	public void start(Stage primary){
+	public void start(Stage primary) {
 
-		//Builds the Pane
+		// Builds the Pane
 		BorderPane root = new BorderPane();
 		GridPane infoPane = new GridPane();
 		dataPane = new GridPane();
 		HBox titlePane = new HBox();
 		VBox left = new VBox();
 		VBox right = new VBox();
-		
+
 		investLText = new Text();
 		investRText = new Text();
 		lStock = new Text();
@@ -97,26 +96,24 @@ public class Main extends Application{
 		lPercent = new Text();
 		rPercent = new Text();
 		investInput = new TextField("0");
-		
+
 		TextField rSearch = new TextField();
 		TextField lSearch = new TextField();
 
-		//Sets up the chart
+		// Sets up the chart
 		final NumberAxis xAxis = new NumberAxis();
 		final NumberAxis yAxis = new NumberAxis();
 		xAxis.setLabel("Time Interval");
 		xAxis.setTickLabelsVisible(false);
 		yAxis.setLabel("Percentage");
-		chart = new LineChart<Number, Number>(xAxis,yAxis);
+		chart = new LineChart<Number, Number>(xAxis, yAxis);
 		chart.setTitle("Stock Comparison");
-
-
 
 		StockLists list = new StockLists();
 		list.readFile();
 		ArrayList<String> array = list.getStocks();
 
-		//Sets up the lists
+		// Sets up the lists
 		ObservableList<String> stocks = FXCollections.observableArrayList(array);
 		leftStockList = new ListView<String>(stocks);
 		rightStockList = new ListView<String>(stocks);
@@ -130,7 +127,7 @@ public class Main extends Application{
 		right.setSpacing(5);
 		chart.getData().add(leftStock);
 		chart.getData().add(rightStock);
-		
+
 		// DATE STUFF
 		startDate = new DatePicker();
 		endDate = new DatePicker();
@@ -189,68 +186,67 @@ public class Main extends Application{
 		    );
 		interval = new ComboBox<String>(intervals);
 		interval.getSelectionModel().select(0);
-		dateInterval = DateInterval.valueOf( interval.getSelectionModel().getSelectedItem() ).getVal();
-		
+		dateInterval = DateInterval.valueOf(interval.getSelectionModel().getSelectedItem()).getVal();
+
 		startDate.setMinWidth(100.0);
 		endDate.setMinWidth(100.0);
 		interval.setMinWidth(85.0);
-		
+
 		start = Calendar.getInstance();
 		start.add(Calendar.YEAR, -1);
 		end = Calendar.getInstance();
-		
-		Date dateTime = new Date(start.getTimeInMillis());
-		startDate.setValue( dateTime.toLocalDate() );
-		dateTime = new Date(end.getTimeInMillis());
-		endDate.setValue( dateTime.toLocalDate() );	
 
-		leftStockList.getSelectionModel().selectedItemProperty().addListener(e->{
-			for(Integer i: leftStockList.getSelectionModel().getSelectedIndices()) {
-				if(array.get(i).equals(leftStockList.getSelectionModel().getSelectedItem())) {
+		Date dateTime = new Date(start.getTimeInMillis());
+		startDate.setValue(dateTime.toLocalDate());
+		dateTime = new Date(end.getTimeInMillis());
+		endDate.setValue(dateTime.toLocalDate());
+
+		leftStockList.getSelectionModel().selectedItemProperty().addListener(e -> {
+			for (Integer i : leftStockList.getSelectionModel().getSelectedIndices()) {
+				if (array.get(i).equals(leftStockList.getSelectionModel().getSelectedItem())) {
 
 					stockLData = new StockInfo(array.get(i), start, end, dateInterval);
 					lStock.setText(array.get(i));
-					ArrayList<Double> list2 = new ArrayList<Double>(stockLData.GetPrices());
-					
+					ArrayList<Double> list2 = new ArrayList<Double>(stockLData.getPercentChanges());
+
 					calculate(true, false);
-					
+
 					leftStock = setData(array.get(i), list2, leftStock);
-					
+
 					break;
-					
+
 				}
 			}
 		});
 
-		rightStockList.getSelectionModel().selectedItemProperty().addListener(e->{
-			for(Integer i: rightStockList.getSelectionModel().getSelectedIndices()) {
-				if(array.get(i).equals(rightStockList.getSelectionModel().getSelectedItem())) {
-					
+		rightStockList.getSelectionModel().selectedItemProperty().addListener(e -> {
+			for (Integer i : rightStockList.getSelectionModel().getSelectedIndices()) {
+				if (array.get(i).equals(rightStockList.getSelectionModel().getSelectedItem())) {
+
 					stockRData = new StockInfo(array.get(i), start, end, dateInterval);
-					
+
 					rStock.setText(array.get(i));
-					ArrayList<Double> list2 = new ArrayList<Double>(stockRData.GetPrices());
-					
+					ArrayList<Double> list2 = new ArrayList<Double>(stockRData.getPercentChanges());
+
 					calculate(false, true);
-					
+
 					rightStock = setData(array.get(i), list2, rightStock);
-					
+
 					break;
-					
+
 				}
 			}
 		});
-		
-		//select initial values
+
+		// select initial values
 		leftStockList.getSelectionModel().select(0);
 		rightStockList.getSelectionModel().select(1);
 
-		
 		dataPane.add(new Text("Invest Amount"), 0, 0);
 		dataPane.add(investInput, 0, 1);
 		dataPane.add(lStock, 0, 3);
 		dataPane.add(rStock, 0, 4);
-		dataPane.add(new Text("Sell Total"),1,2);
+		dataPane.add(new Text("Sell Total"), 1, 2);
 		dataPane.add(investLText, 1, 3);
 		dataPane.add(investRText, 1, 4);
 		dataPane.add(new Text("Gain/Loss"), 2, 2);
@@ -262,93 +258,73 @@ public class Main extends Application{
 		dataPane.setPadding(new Insets(5));
 		dataPane.setVgap(5);
 		dataPane.setHgap(5);
-		
-		
+
 		// ----INTERVAL AND DATES----
 		interval.setOnAction(e -> {
-			
-			dateInterval = DateInterval.valueOf( interval.getSelectionModel().getSelectedItem() ).getVal();
+
+			dateInterval = DateInterval.valueOf(interval.getSelectionModel().getSelectedItem()).getVal();
 			updateLists();
-			
+
 		});
-		
+
 		startDate.valueProperty().addListener(event -> {
-		    java.util.Date date = Date.from( startDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant() );
-		    Calendar tempDate = Calendar.getInstance();
-		    tempDate.setTime(date);
-		    
-		    if(tempDate.compareTo(Calendar.getInstance()) < 0) {
-			    start = tempDate;
-			    
-			    updateLists();
-		    }
-		    
-		    //startDate.setValue(   new Date(  start.getTimeInMillis()  ).toLocalDate()   );
-		    
+			java.util.Date date = Date.from(startDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+			start = Calendar.getInstance();
+			start.setTime(date);
+			updateLists();
 		});
-		
+
 		endDate.valueProperty().addListener(event -> {
-		    java.util.Date date = Date.from( startDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant() );
-		    Calendar tempDate = Calendar.getInstance();
-		    tempDate.setTime(date);
-		    
-		    if(tempDate.compareTo(Calendar.getInstance()) <= 0) {
-			    end = tempDate;
-			    
-			    updateLists();
-		    }
-		    
-		    //endDate.setValue(   new Date(  end.getTimeInMillis()  ).toLocalDate()   );
-		    
+			java.util.Date date = Date.from(startDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+			end = Calendar.getInstance();
+			end.setTime(date);
+			updateLists();
 		});
-		
+
 		// ---CALCULATE TEXT---
-		investInput.textProperty().addListener( (obs, oldText, newText) -> {
-			if( Main.isNumber(newText) ) {
-				
+		investInput.textProperty().addListener((obs, oldText, newText) -> {
+			if (Main.isNumber(newText)) {
+
 				calculate(true, true);
-				
+
 			}
 		});
-		
-		
+
 		// -----SEARCH------
-		rSearch.textProperty().addListener( (obs, oldText, newText) -> {
-			for(int i = 0; i < array.size(); i++) {
-				if(  array.get(i).startsWith( newText.toUpperCase() )  ) {
+		rSearch.textProperty().addListener((obs, oldText, newText) -> {
+			for (int i = 0; i < array.size(); i++) {
+				if (array.get(i).startsWith(newText.toUpperCase())) {
 					rightStockList.getSelectionModel().select(i);
 					rightStockList.scrollTo(i);
 					break;
 				}
 			}
-			
+
 		});
-		
-		lSearch.textProperty().addListener( (obs, oldText, newText) -> {
-			for(int i = 0; i < array.size(); i++) {
-				if(array.get(i).startsWith( newText.toUpperCase() )) {
+
+		lSearch.textProperty().addListener((obs, oldText, newText) -> {
+			for (int i = 0; i < array.size(); i++) {
+				if (array.get(i).startsWith(newText.toUpperCase())) {
 					leftStockList.getSelectionModel().select(i);
 					leftStockList.scrollTo(i);
 					break;
 				}
 			}
-			
+
 		});
-		
-		
-		
-		//infoPane.add(new Text("test"), x, y);
+
+		// infoPane.add(new Text("test"), x, y);
 		infoPane.add(chart, 0, 1);
-		infoPane.setColumnSpan(chart, GridPane.REMAINING);
+		GridPane.setColumnSpan(chart, GridPane.REMAINING);
 		infoPane.add(startDate, 0, 0);
-		infoPane.setHalignment(startDate, HPos.LEFT);
+		GridPane.setHalignment(startDate, HPos.LEFT);
 		infoPane.add(interval, 1, 0);
-		infoPane.setHalignment(interval,HPos.CENTER);
+		GridPane.setHalignment(interval, HPos.CENTER);
 		infoPane.add(endDate, 2, 0);
-		infoPane.setHalignment(endDate, HPos.RIGHT);
+		GridPane.setHalignment(endDate, HPos.RIGHT);
 		infoPane.setPadding(new Insets(5));
 
-		titlePane.getChildren().add(new Text("Stock Stocker"));
+		titlePane.getChildren().add(new Text("Stock Stalker"));
 		titlePane.setAlignment(Pos.CENTER);
 		titlePane.setPadding(new Insets(5));
 
@@ -358,93 +334,87 @@ public class Main extends Application{
 		root.setLeft(left);
 		root.setBottom(dataPane);
 
-		Scene scene = new Scene(root,1000,600);
+		Scene scene = new Scene(root, 1000, 600);
 		primary.setScene(scene);
 		primary.show();
 	}
-	
-	
+
 	protected void calculate(boolean left, boolean right) {
-		
-		DecimalFormat df = new DecimalFormat("#.00"); 
-		
+
+		DecimalFormat df = new DecimalFormat("#.00");
+
 		investment = Double.parseDouble(investInput.getText());
-		
-		if(left) {
-			//right or both
+
+		if (left) {
+			// right or both
 			ArrayList<Double> profitL = new ArrayList<Double>(stockLData.GetProfitInfo(investment));
-			investLText.setText("$" + df.format(profitL.get(profitL.size()-1))+"");
-			double difference = StockInfo.getTotalChange(investment, profitL.get(profitL.size() - 1));
+			investLText.setText("$" + df.format(profitL.get(profitL.size() - 1)) + "");
+			double difference = StockInfo.getValueChange(investment, profitL.get(profitL.size() - 1));
 			lDifference.setText((difference < 0 ? "-$" : "$") + df.format(Math.abs(difference)));
-			double percent = StockInfo.getTotalPercentChange(investment, profitL.get(profitL.size() - 1));
-			lPercent.setText(df.format(percent) + "%");
+			double percent = StockInfo.getPercentChange(investment, profitL.get(profitL.size() - 1));
+			lPercent.setText(df.format(percent*100.0) + "%");
 
 		}
-		if(right) {
+		if (right) {
 			ArrayList<Double> profitR = new ArrayList<Double>(stockRData.GetProfitInfo(investment));
-			investRText.setText("$" + df.format(profitR.get(profitR.size()-1))+"");
-			double difference = StockInfo.getTotalChange(investment, profitR.get(profitR.size() - 1));
+			investRText.setText("$" + df.format(profitR.get(profitR.size() - 1)) + "");
+			double difference = StockInfo.getValueChange(investment, profitR.get(profitR.size() - 1));
 			rDifference.setText((difference < 0 ? "-$" : "$") + df.format(Math.abs(difference)));
-			double percent = StockInfo.getTotalPercentChange(investment, profitR.get(profitR.size() - 1));
-			rPercent.setText(df.format(percent) + "%");
+			double percent = StockInfo.getPercentChange(investment, profitR.get(profitR.size() - 1));
+			rPercent.setText(df.format(percent*100.0) + "%");
 
 		}
-		
+
 	}
-	
-	
+
 	protected void updateLists() {
-		
+
 		int index = leftStockList.getSelectionModel().getSelectedIndex();
-		
+
 		leftStockList.getSelectionModel().clearSelection();
 		leftStockList.getSelectionModel().select(index);
-		
-		
+
 		index = rightStockList.getSelectionModel().getSelectedIndex();
-		
+
 		rightStockList.getSelectionModel().clearSelection();
 		rightStockList.getSelectionModel().select(index);
-		
-	}
-	
-	
 
-	protected XYChart.Series<Number, Number> setData(String name, ArrayList<Double> data, XYChart.Series<Number, Number> oldSeries) {
+	}
+
+	protected XYChart.Series<Number, Number> setData(String name, ArrayList<Double> data,
+			XYChart.Series<Number, Number> oldSeries) {
 		Series<Number, Number> series = new XYChart.Series<Number, Number>();
 		series.setName(name);
-		for(int i = 0; i < data.size(); i++) {
-			series.getData().add(new XYChart.Data<Number, Number>(i,data.get(i)));
+		for (int i = 0; i < data.size(); i++) {
+			series.getData().add(new XYChart.Data<Number, Number>(i, data.get(i)));
 		}
 		chart.setCreateSymbols(false);
-		chart.getData().set( chart.getData().indexOf(oldSeries), series);
-		
+		chart.getData().set(chart.getData().indexOf(oldSeries), series);
+
 		return series;
 	}
-	
-	
-	//Checks to make sure a string contains only numbers
-    static boolean isNumber(String s){
 
-        char a;
-        int c = 0;
+	// Checks to make sure a string contains only numbers
+	static boolean isNumber(String s) {
+		char a;
+		int c = 0;
 
-        for(int i = 0; i < s.length(); i++){
+		for (int i = 0; i < s.length(); i++) {
+			a = s.charAt(i);
+			if (a == '.') {
+				continue;
+			} else if (!Character.isDigit(a))
+				c++;
+		}
 
-            a = s.charAt(i);
+		if (s.length() == 0)
+			c++;
 
-            if(a == '.') {
-                continue;
-            }else if(!Character.isDigit(a))
-                c++;
-        }
+		return c == 0;
+	}
 
-        if(s.length() == 0)
-            c++;
-
-        return c == 0;
-    }
-
-	public static void main(String[]args){launch(args);}
+	public static void main(String[] args) {
+		launch(args);
+	}
 
 }
