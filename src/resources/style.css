@@ -17,11 +17,24 @@
     -fx-padding: 3 6 6 6;
 }
 
-.stocker-pane {
-	/*-fx-background-color: #5cd9ff;*/
+/*stock panes at the bottom*/
+.left-stock-pane {
+	-fx-background-color: #5cd9ff;
 	-fx-border-color: #444;
 	-fx-border-size: 2px;
 	-fx-alignment: center;
+}
+.left-stock-text {
+	-fx-fill: #000;
+}
+.right-stock-pane {
+	-fx-background-color: #304f6b;
+	-fx-border-color: #444;
+	-fx-border-size: 2px;
+	-fx-alignment: center;
+}
+.right-stock-text {
+	-fx-fill: #FFF;
 }
 
 

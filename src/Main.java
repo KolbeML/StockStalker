@@ -86,13 +86,20 @@ public class Main extends Application {
 		
 		//Toggle value and button
 		percent = true;
-		Button change = new Button("Price");
+		Button change = new Button("See Price");
 		change.getStyleClass().add("stocker-button");
 
 		//Data Texts
-		investmentTexts = new Text[14];
+		investmentTexts = new Text[16];
 		for(int i = 0; i < investmentTexts.length; i++) {
-			investmentTexts[i] = new Text("0");
+			investmentTexts[i] = new Text("0");		
+			if(isInvestmentLeft(i)) {
+				investmentTexts[i].getStyleClass().add("left-stock-text");
+			}
+			if(isInvestmentRight(i)) {
+				investmentTexts[i].getStyleClass().add("right-stock-text");
+			}
+
 		}
 		investInput = new TextField("0");
 		
@@ -269,20 +276,36 @@ public class Main extends Application {
 		rightStockList.getSelectionModel().select(1);
 
 		//Arranges the data at the bottom
-		int y = 3;
+		int y = 4;
 		int x = 0;
-		FlowPane[] panes = new FlowPane[14];
+		FlowPane[] panes = new FlowPane[16];
 		for(int i = 0; i < panes.length; i++) {
 			panes[i] = new FlowPane();
 			
-			if(y == 5) {
-				x++;
-				y = 2;
+			if(isInvestmentLeft(i)) {
+				panes[i].getStyleClass().add("left-stock-pane");
 			}
-			panes[i].getStyleClass().add("stocker-pane");
+			if(isInvestmentRight(i)) {
+				panes[i].getStyleClass().add("right-stock-pane");
+			}
 			panes[i].getChildren().add(investmentTexts[i]);
-			dataPane.add(panes[i], x, y);
-			y++;
+			
+			if(i != TextItems.L_SIZE.val() && i != TextItems.R_SIZE.val()) {
+				//don't add placeholder panes
+				dataPane.add(panes[i], x, y);
+				
+				x++;
+				
+				if(x == 5) {
+					x = 0;
+					y--;
+					if(y == 2) {
+						x++;
+					}
+				}
+				
+			}
+			
 		}
 		
 		investmentTexts[TextItems.RETURNS.val()].setText("Return");
@@ -421,7 +444,40 @@ public class Main extends Application {
 		}
 
 	}
+	
+	
+	
+	
+	protected ArrayList<Text> getInvestmentInfo(boolean leftStock, boolean rightStock) {
+		
+		ArrayList<Text> items = new ArrayList<Text>();
+		
+		for(int i = 0; i < investmentTexts.length; i++) {
+			Text item = investmentTexts[i];
+			
+			if( isInvestmentLeft(i) && leftStock) {
+				items.add(item);
+			}
+			
+			if( isInvestmentRight(i) && rightStock) {
+				items.add(item);
+			}
+			
+		}
+		
+		return items;
+		
+	}
+	
+	
+	private static boolean isInvestmentLeft(int index) {	
+		return index < TextItems.L_SIZE.val();	
+	}
 
+	private static boolean isInvestmentRight(int index) {	
+		return index > TextItems.L_SIZE.val() && index < TextItems.R_SIZE.val();
+	}
+	
 	protected void updateLists() {
 
 		int index = leftStockList.getSelectionModel().getSelectedIndex();

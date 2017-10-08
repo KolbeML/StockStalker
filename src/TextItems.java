@@ -1,19 +1,30 @@
 
 public enum TextItems {
+	// left info
 	L_STOCK(0),
-	R_STOCK(1),
-	RETURNS(2),
-	L_PROFIT(3),
-	R_PROFIT(4),
-	GAIN_LOSS(5),
-	L_DIFFERENCE(6),
-	R_DIFFERENCE(7),
-	PERCENT_CHANGE(8),
-	L_PERCENT(9),
-	R_PERCENT(10),
-	STOCK_PRICE(11),
-	L_PRICE(12),
-	R_PRICE(13);
+	L_PROFIT(1),
+	L_DIFFERENCE(2),
+	L_PERCENT(3),
+	L_PRICE(4),
+	
+	L_SIZE(5),
+	
+	// right info
+	R_STOCK(6),
+	R_PROFIT(7),
+	R_DIFFERENCE(8),
+	R_PERCENT(9),
+	R_PRICE(10),
+	
+	R_SIZE(11),
+	
+	//constants
+	RETURNS(12),
+	GAIN_LOSS(13),
+	PERCENT_CHANGE(14),
+	STOCK_PRICE(15);
+	
+	
 	
 	private final int value;
 	
