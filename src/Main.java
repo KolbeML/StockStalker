@@ -55,7 +55,7 @@ public class Main extends Application {
 	private Text rPercent;
 	private NumberAxis yAxis;
 
-	private double investment;
+	private double investment = 100.0;
 
 	private boolean percent;
 
@@ -115,7 +115,7 @@ public class Main extends Application {
 		chart.setTitle("Stock Comparison");
 		chart.getData().add(leftStock);
 		chart.getData().add(rightStock);
-
+		
 		//Pulls in the data
 		StockLists.readFile();
 		ArrayList<String> array = StockLists.getStocks();
@@ -124,6 +124,10 @@ public class Main extends Application {
 		ObservableList<String> stocks = FXCollections.observableArrayList(array);
 		leftStockList = new ListView<String>(stocks);
 		rightStockList = new ListView<String>(stocks);
+		
+		leftStockList.getStyleClass().add("leftList");
+		rightStockList.getStyleClass().add("rightList");
+		
 		left.getChildren().addAll(lSearch, leftStockList);
 		left.setSpacing(5);
 		right.getChildren().addAll(rSearch, rightStockList);
@@ -218,7 +222,7 @@ public class Main extends Application {
 					calculate(true, false);
 
 					leftStock = setData(stockLData.getName(), list2, leftStock);
-
+					
 					break;
 
 				}
@@ -290,12 +294,12 @@ public class Main extends Application {
 		change.setOnAction(e -> {
 			if (percent) {
 				percent = false;
-				change.setText("Percentage");
+				change.setText("See Percentage");
 				yAxis.setLabel("Price");
 				updateLists();
 			} else {
 				percent = true;
-				change.setText("Price");
+				change.setText("See Price");
 				yAxis.setLabel("Percentage");
 				updateLists();
 			}

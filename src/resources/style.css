@@ -4,22 +4,58 @@
  * -lightBlue: #5cd9ff
  * -darkBlue: #006699
  * -darkDarkBlue:  #304f6b
- * -green: #15db2
+ * -green: #15db22
 */
 #title-text {
 	-fx-font-size: 24px;
 }
 
 .stocker-button {
-    -fx-background-color: #5cd9ff;
-    -fx-border-color: #304f6b;
+    -fx-background-color: #3fd;
+    -fx-border-color: #15db22;
     -fx-border-radius: 5px;
     -fx-padding: 3 6 6 6;
 }
 
 .stocker-pane {
-	-fx-background-color: #5cd9ff;
-	-fx-border-color: #304f6b;
-	-fx-border-radius: 5px;
+	/*-fx-background-color: #5cd9ff;*/
+	-fx-border-color: #444;
+	-fx-border-size: 2px;
 	-fx-alignment: center;
+}
+
+
+/* List View Style Left */
+.leftList .list-cell:even {
+	-fx-background-color: #66eeff;
+	-fx-text-fill: black;
+}
+.leftList .list-cell:odd {
+	-fx-background-color: #5cd9ff;
+	-fx-text-fill: black;
+}
+
+/* List View Style Right */
+.rightList .list-cell:even {
+	-fx-background-color: #445577;
+	-fx-text-fill: white;
+}
+.rightList .list-cell:odd {
+	-fx-background-color: #304f6b;
+	-fx-text-fill: white;
+}
+
+/* Chart Style */
+.default-color0.chart-series-line {
+	-fx-stroke: #5cd9ff;	
+}
+.default-color0.chart-legend-item-symbol {
+	-fx-background-color: #5cd9ff;
+}
+
+.default-color1.chart-legend-item-symbol {
+	-fx-background-color: #304f6b;
+}
+.default-color1.chart-series-line {
+	-fx-stroke: #304f6b;
 }
