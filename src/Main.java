@@ -202,7 +202,7 @@ public class Main extends Application {
 
 					calculate(true, false);
 
-					leftStock = setData(array.get(i), list2, leftStock);
+					leftStock = setData(stockLData.getName(), list2, leftStock);
 
 					break;
 
@@ -221,7 +221,7 @@ public class Main extends Application {
 
 					calculate(false, true);
 
-					rightStock = setData(array.get(i), list2, rightStock);
+					rightStock = setData(stockRData.getName(), list2, rightStock);
 
 					break;
 

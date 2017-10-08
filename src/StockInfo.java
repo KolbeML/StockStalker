@@ -24,6 +24,12 @@ public class StockInfo {
 	public List<HistoricalQuote> getHistory() {
 		return history;
 	}
+	
+	public String getName() {
+		
+		return stock.getName();
+		
+	}
 
 	/*
 	 * 
