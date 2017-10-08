@@ -222,7 +222,7 @@ public class Main extends Application{
 		    java.util.Date date = Date.from( startDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant() );
 		    start = Calendar.getInstance();
 		    start.setTime(date);
-		    updateLists();    
+		    updateLists();
 		});
 		
 		endDate.valueProperty().addListener(event -> {
