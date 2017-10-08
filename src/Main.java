@@ -267,7 +267,10 @@ public class Main extends Application {
 				x++;
 				y = 2;
 			}
+			
+			panes[i].getStyleClass().add("stocker-pane");
 			dataPane.add(panes[i], x, y);
+			
 			y++;
 		}
 		
@@ -286,12 +289,9 @@ public class Main extends Application {
 		dataPane.add(new Text("Investment Amount"), 0, 0);
 		dataPane.add(investInput, 0, 1);
 		
-		for(int i = 0; i < panes.length; i++) {
-			
-		}
-		dataPane.setPadding(new Insets(5));
-		dataPane.setVgap(5);
-		dataPane.setHgap(5);
+		//dataPane.setPadding(new Insets(5));
+		//dataPane.setVgap(5);
+		//dataPane.setHgap(5);
 		dataPane.add(change, 4, 0);
 
 		//Toggle button for percentage and price
@@ -325,7 +325,7 @@ public class Main extends Application {
 		});
 
 		endDate.valueProperty().addListener(event -> {
-			java.util.Date date = Date.from(startDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+			java.util.Date date = Date.from(endDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
 			end = Calendar.getInstance();
 			end.setTime(date);
 			updateLists();
@@ -389,7 +389,7 @@ public class Main extends Application {
 		root.setBottom(dataPane);
 
 		Scene scene = new Scene(root, 1000, 600);
-		scene.getStylesheets().add("resources/stylesheet.css");
+		scene.getStylesheets().add("resources/style.css");
 		primary.setScene(scene);
 		primary.show();
 	}

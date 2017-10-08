@@ -1,17 +1,25 @@
 
+
+/*
+ * -lightBlue: #5cd9ff
+ * -darkBlue: #006699
+ * -darkDarkBlue:  #304f6b
+ * -green: #15db2
+*/
 #title-text {
 	-fx-font-size: 24px;
 }
 
 .stocker-button {
-    -fx-background-color: rgb(85, 120, 170);
-    -fx-border-color: rgb(10, 20, 50);
+    -fx-background-color: #5cd9ff;
+    -fx-border-color: #304f6b;
     -fx-border-radius: 5px;
     -fx-padding: 3 6 6 6;
 }
 
 .stocker-pane {
-	-fx-background-color: rgb(85, 120, 170);
-	-fx-border-color: rgb(10, 20, 50);
+	-fx-background-color: #5cd9ff;
+	-fx-border-color: #304f6b;
 	-fx-border-radius: 5px;
+	-fx-align-items: CENTER;
 }
