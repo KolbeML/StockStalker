@@ -142,6 +142,37 @@ public class StockInfo {
 		}
 
 		return profits;
+		
+		//User is able to add the percentage rise/drop in order to sell/buy stocks.
+		//When the price hits too low (max percentage dropped), sell all.
+		
+		/*List<Double> profits = new ArrayList<Double>();
+
+		double setDrop = 0.02;
+		double setRise = 0.02;
+		double dropMax = 10.0;
+		
+		double profit = initialInvestment;
+		int number = 0;
+		double leftover =  getValueChange((double) (history.get(0).getClose().doubleValue() * number), profit);
+
+		for (int i = 0; i < history.size(); i++) {
+			profit = (profit - leftover) * (1 + percentDiff(i)) + leftover;
+			if (percentDiff(i) >= setRise || percentDiff(i) <= dropMax) {
+				number = 0;
+				if (percentDiff(i) != 0)
+					leftover = getValueChange((double) (history.get(i).getClose().doubleValue() * number), profit);
+			}
+			if (percentDiff(i) <= -setDrop) {
+				number += (int) (leftover / history.get(i).getClose().doubleValue());
+				if (percentDiff(i) != 0)
+					leftover = getValueChange((double) (history.get(i).getClose().doubleValue() * number), profit);
+			}
+			profits.add(profit);
+		}
+
+		return profits;*/
+
 
 	}
 
