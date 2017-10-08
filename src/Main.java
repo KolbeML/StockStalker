@@ -27,6 +27,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
 import javafx.util.Callback;
 
 import java.sql.Date;
@@ -83,6 +84,10 @@ public class Main extends Application {
 		VBox left = new VBox();
 		VBox right = new VBox();
 
+		//Icon & title
+		primary.getIcons().add(new Image("justicon.PNG"));
+        primary.setTitle("StockStalker");
+		
 		//Toggle value and button
 		percent = true;
 		Button change = new Button("Price");
