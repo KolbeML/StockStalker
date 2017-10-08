@@ -43,6 +43,8 @@ public class Main extends Application{
 	private ComboBox<String> interval;
 	private GridPane dataPane;
 	private TextField investInput;
+	private TextField rSearch;
+	private TextField lSearch;
 	private Text investLText;
 	private Text investRText;
 	private Text rStock;
@@ -107,6 +109,11 @@ public class Main extends Application{
 		
 		investInput = new TextField("0");
 		Button calculate = new Button("Calculate");
+		Button rSearchBtn = new Button("SearchR");
+		Button lSearchBtn = new Button("Search");
+		
+		TextField rSearch = new TextField();
+		TextField lSearch = new TextField();
 
 		//Sets up the chart
 		final NumberAxis xAxis = new NumberAxis();
@@ -129,8 +136,8 @@ public class Main extends Application{
 		rightStockList = new ListView<String>(stocks);
 		leftStock = new XYChart.Series();
 		rightStock = new XYChart.Series();
-		left.getChildren().add(leftStockList);
-		right.getChildren().add(rightStockList);
+		left.getChildren().addAll(lSearch, lSearchBtn, leftStockList);
+		right.getChildren().addAll(rSearch, rSearchBtn, rightStockList);
 
 		startDate = new ComboBox<String>();
 		endDate = new ComboBox<String>();
@@ -195,6 +202,27 @@ public class Main extends Application{
 				investRText.setText("$" + df.format(profitR.get(profitR.size()-1))+"");
 				investLText.setText("$" + df.format(profitL.get(profitL.size()-1))+"");				
 			}
+		});
+		
+		rSearchBtn.setOnAction(e->{
+			for(int i = 0; i < array.size(); i++) {
+				if(array.get(i).equals(rSearch.getText())) {
+					rightStockList.getSelectionModel().select(i);
+					rightStockList.scrollTo(i);
+				}
+			}
+			
+		});
+		
+
+		lSearchBtn.setOnAction(e->{
+			for(int i = 0; i < array.size(); i++) {
+				if(array.get(i).equals(lSearch.getText())) {
+					leftStockList.getSelectionModel().select(i);
+					leftStockList.scrollTo(i);
+				}
+			}
+			
 		});
 		
 		//infoPane.add(new Text("test"), x, y);
