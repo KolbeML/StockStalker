@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.text.*;
 import java.util.Calendar;
 import java.util.List;
 
@@ -183,14 +184,16 @@ public class Main extends Application{
 		dataPane.add(investLText, 1, 3);
 		dataPane.add(investRText, 1, 4);
 		
+		DecimalFormat df = new DecimalFormat("#.00"); 
+		
 		calculate.setOnAction(e->{
 			if(Main.isNumber(investInput.getText())) {
 				investment = Double.parseDouble(investInput.getText());
 				
 				ArrayList<Double> profitR = new ArrayList<Double>(stockRData.GetProfitInfo(investment));
 				ArrayList<Double> profitL = new ArrayList<Double>(stockLData.GetProfitInfo(investment));
-				investRText.setText(profitR.get(profitR.size()-1)+"");
-				investLText.setText(profitL.get(profitL.size()-1)+"");				
+				investRText.setText("$" + df.format(profitR.get(profitR.size()-1))+"");
+				investLText.setText("$" + df.format(profitL.get(profitL.size()-1))+"");				
 			}
 		});
 		
