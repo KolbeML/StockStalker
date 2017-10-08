@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 import java.text.*;
 import java.util.Calendar;
-import java.util.List;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -18,14 +18,10 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
-
-import java.io.IOException;
 
 import yahoofinance.*;
 import yahoofinance.histquotes.HistoricalQuote;
@@ -50,6 +46,8 @@ public class Main extends Application{
 	private Text investRText;
 	private Text rStock;
 	private Text lStock;
+	private Text lDifference;
+	private Text rDifference;
 	
 	private double investment;
 	
@@ -75,6 +73,8 @@ public class Main extends Application{
 		investRText = new Text();
 		lStock = new Text();
 		rStock = new Text();
+		lDifference = new Text();
+		rDifference = new Text();
 		
 		investInput = new TextField("0");
 		
@@ -103,13 +103,14 @@ public class Main extends Application{
 		leftStock = new XYChart.Series<Number, Number>();
 		rightStock = new XYChart.Series<Number, Number>();
 		left.getChildren().addAll(lSearch, leftStockList);
+		left.setPadding(new Insets(5));
+		left.setSpacing(5);
 		right.getChildren().addAll(rSearch, rightStockList);
+		right.setPadding(new Insets(5));
+		right.setSpacing(5);
 		chart.getData().add(leftStock);
 		chart.getData().add(rightStock);
 		
-		
-		
-
 		startDate = new ComboBox<String>();
 		endDate = new ComboBox<String>();
 		interval = new ComboBox<String>();
@@ -165,8 +166,16 @@ public class Main extends Application{
 		dataPane.add(investInput, 0, 1);
 		dataPane.add(lStock, 0, 3);
 		dataPane.add(rStock, 0, 4);
+		dataPane.add(new Text("Sell Total"),1,2);
 		dataPane.add(investLText, 1, 3);
 		dataPane.add(investRText, 1, 4);
+		dataPane.add(new Text("Gain/Loss"), 2, 2);
+		dataPane.add(lDifference, 2, 3);
+		dataPane.add(rDifference, 2, 4);
+		dataPane.add(new Text("Percent Change"), 3, 2);
+		dataPane.setPadding(new Insets(5));
+		dataPane.setVgap(5);
+		dataPane.setHgap(5);
 		
 		
 		
@@ -210,9 +219,11 @@ public class Main extends Application{
 		infoPane.add(endDate, 2, 0);
 		infoPane.add(interval, 1, 0);
 		infoPane.setHalignment(interval,HPos.CENTER);
+		infoPane.setPadding(new Insets(5));
 
 		titlePane.getChildren().add(new Text("Stock Stocker"));
 		titlePane.setAlignment(Pos.CENTER);
+		titlePane.setPadding(new Insets(5));
 
 		root.setTop(titlePane);
 		root.setCenter(infoPane);
@@ -220,8 +231,8 @@ public class Main extends Application{
 		root.setLeft(left);
 		root.setBottom(dataPane);
 
-
-		primary.setScene(new Scene(root,1000,600));
+		Scene scene = new Scene(root,1000,600);
+		primary.setScene(scene);
 		primary.show();
 	}
 	
@@ -236,10 +247,16 @@ public class Main extends Application{
 			//right or both
 			ArrayList<Double> profitL = new ArrayList<Double>(stockLData.GetProfitInfo(investment));
 			investLText.setText("$" + df.format(profitL.get(profitL.size()-1))+"");
+			double difference = profitL.get(profitL.size()-1)-investment;
+			
+			lDifference.setText((difference < 0 ? "-$" : "$")+df.format(difference));
 		}
 		if(right) {
 			ArrayList<Double> profitR = new ArrayList<Double>(stockRData.GetProfitInfo(investment));
 			investRText.setText("$" + df.format(profitR.get(profitR.size()-1))+"");
+			double difference = profitR.get(profitR.size()-1)-investment;
+	
+			rDifference.setText((difference < 0 ? "-$" : "$")+df.format(difference));
 		}
 		
 	}
@@ -247,7 +264,6 @@ public class Main extends Application{
 	
 
 	protected XYChart.Series<Number, Number> setData(String name, ArrayList<Double> data, XYChart.Series<Number, Number> oldSeries) {
-		//chart.getData().remove(series);
 		Series<Number, Number> series = new XYChart.Series<Number, Number>();
 		series.setName(name);
 		for(int i = 0; i < data.size(); i++) {
@@ -259,6 +275,8 @@ public class Main extends Application{
 		return series;
 	}
 	
+	
+	//Checks to make sure a string contains only numbers
     static boolean isNumber(String s){
 
         char a;
