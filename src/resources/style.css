@@ -47,6 +47,10 @@
 	-fx-background-color: #5cd9ff;
 	-fx-text-fill: black;
 }
+.leftList .list-cell:selected {
+	-fx-background-color: #27a7c7;
+	-fx-text-fill: white;
+}
 
 /* List View Style Right */
 .rightList .list-cell:even {
@@ -56,6 +60,10 @@
 .rightList .list-cell:odd {
 	-fx-background-color: #304f6b;
 	-fx-text-fill: white;
+}
+.rightList .list-cell:selected {
+	-fx-background-color: #7787a7;
+	-fx-text-fill: black;
 }
 
 /* Chart Style */
